@@ -1,25 +1,368 @@
 $(document).ready(() => {
     $.get("./render_music_source.js", (sourceScript) => {
         const interpreter = new Sval({
-          ecmaVer: 'latest',
-          sourceType: 'script',
-          // Whether the code runs in a sandbox
-          sandBox: true,
+            ecmaVer: 'latest',
+            sourceType: 'script',
+            sandBox: true,
         })
         
-        interpreter.import({
-            lx: LxApi
-        });
+        interpreter.import({ lx: LxApi });
 
         interpreter.run(sourceScript)
         
-        
-        LxApi._emit(LxApi.EVENT_NAMES.request, {
-          source: 'kw',
-          action: 'musicUrl',
-          info: { type: '320k', musicInfo: { songmid: '188247885' } }
-        }).then((a) => {
-          console.log('脚本里的 request handler 已经执行完成', a); // 'a' 现在应该是 musicUrl
-        });
     })
 });
+
+document.addEventListener('touchstart', function (event) {
+    // 禁止缩放
+    if (event.touches.length > 1) {
+        event.preventDefault();
+    }
+}, { passive: false });
+
+
+const uni = {
+	showToast: function (str) {
+		try {
+			if (typeof (window.via) == "object") { window.via.toast(str.title); }
+			else if (typeof (window.mbrowser) == "object") { window.mbrowser.showToast(str.title); }
+			else { alert(str.title); }
+		} catch {
+			alert(str.title);
+		}
+	},
+	showModal: function (options) {
+		if (options.confirmText) {
+			var tt = confirm(options.title + "\n" + options.content);
+			if (tt) {
+				options.success({ "cancel": false, "confirm": true });
+			} else {
+				options.success({ "cancel": true, "confirm": false });
+			}
+		} else {
+			alert(options.title + "\n" + options.content);
+		}
+		console.log(options);
+	},
+
+	/* STORAGE */
+	setStorageSync: function (key, val) {
+		localStorage.setItem(key, val);
+	},
+	getStorageSync: function (key) {
+		return localStorage.getItem(key);
+	},
+
+	/* CLIPBOARD */
+	getClipboardData: async function (options) {
+		const clipboardObj = navigator.clipboard;
+		try {
+			const text = await navigator.clipboard.readText();
+			options.success({ "data": text }); // 直接传递text
+		} catch (err) {
+			options.fail(err); // 直接传递错误
+		}
+	},
+	setClipboardData: async function (options) {
+		const clipboardObj = navigator.clipboard;
+		try {
+			await navigator.clipboard.writeText(options.data);
+			options.success({ "data": options.data }); // 直接传递data
+		} catch (err) {
+			options.fail(err); // 直接传递错误
+		}
+	}
+};
+
+
+PetiteVue.createApp({
+    /* 图标 */
+    ICON,
+
+    /* 加载球 */
+    isLoading: false,
+
+    /* 侧面栏、路由控制 */
+    navbarItems: [
+        { param: 'player', name: '播放器', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m380-300 280-180-280-180v360ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"></path></svg>' },
+        { param: 'search', name: '搜索页', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"></path></svg>' },
+        { param: 'collection', name: '收藏夹', icon: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960"><path d="m354-287 126-76 126 77-33-144 111-96-146-13-58-136-58 135-146 13 111 97-33 143ZM233-120l65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Zm247-350Z"></path></svg>' }
+    ],
+    currentPageView: 'search',
+
+    /* 搜索页全局变量 */
+    currentSearchWord: '',
+    currentSearchPlatform: 'netease',
+    currentSearchResult: [],
+
+    /* 播放器全局变量 */
+    currentPlayInfo: {
+        "id": "default",
+        "name": "未播放歌曲",
+        "artist": "未知艺术家",
+        "source": "未知来源",
+        "cover": "./img/default_cover.svg",
+        "mp3": "./img/default_audio.mp3",
+        "vip": false
+    },
+    showLyricFlag: false,
+    showPlayListFlag: false,
+    currentLyric: '',
+    currentLyric_Original: '',
+    playQuality: "128k",
+
+    /* 收藏夹全局变量 */
+    collectionList: [],
+    collectionRefresherText: '',
+    playList: [],
+
+
+    /* 侧边栏 */
+    switchNav(item) {
+        this.currentPageView = item.param;
+    },
+
+    /* 搜索页 */
+    doSearch() {
+        if (!this.currentSearchWord) { this.currentSearchResult = []; return; }
+
+        this.isLoading = true;
+
+        getSearchResult(this.currentSearchWord, this.currentSearchPlatform, (res) => {
+            this.currentSearchResult = res;
+            this.isLoading = false;
+        });
+    },
+
+    /* 播放器 */
+    jsonContains(jsonArray, jsonObject) {
+        for (var i = 0; i < jsonArray.length; i++) {
+            var element = jsonArray[i];
+            if (element.id === jsonObject.id) {
+                return true;
+            }
+        }
+        return false;
+    },
+    playMusic(item, from) {
+        this.isLoading = true;
+
+        this.currentPageView = 'player';
+        this.currentPlayInfo = item;
+
+        if (from == "collection") {
+            // 如果是从收藏夹播放，则直接使用收藏夹列表
+            console.log("从收藏夹播放，使用收藏夹列表");
+            this.playList = this.collectionList;
+            this.isLoading = false;
+            return;
+
+        } else if (from == "playlist" || this.jsonContains(this.playList, this.currentPlayInfo)) {
+            // 如果当前播放列表中已存在该歌曲，则不重复添加
+            console.log("当前播放列表中已存在该歌曲，跳过添加");
+            this.isLoading = false;
+            return;
+
+        } else {
+            getMusicSource(item, this.playQuality, (res) => {
+                this.currentPlayInfo = res;
+                this.isLoading = false;
+
+                // 播放列表
+                this.playList.push(res);
+
+                console.log("当前播放列表：", this.playList);
+            });
+        }
+    },
+    prevSong() {
+        if (this.playList.length == 0) { return; }
+
+        let currentIndex = this.playList.findIndex(item => item.id === this.currentPlayInfo.id);
+        if (currentIndex <= 0) {
+            currentIndex = this.playList.length; // 如果当前歌曲不存在于列表中或是第一首，则重置为最后一首
+        }
+        this.playMusic(this.playList[currentIndex - 1], "playlist");
+    },
+    nextSong() {
+        if (this.playList.length == 0) { return; }
+
+        let currentIndex = this.playList.findIndex(item => item.id === this.currentPlayInfo.id);
+        if (currentIndex < 0 || currentIndex >= this.playList.length - 1) {
+            currentIndex = -1; // 如果当前歌曲不存在于列表中或是最后一首，则重置为-1
+        }
+        this.playMusic(this.playList[currentIndex + 1], "playlist");
+    },
+    showLyric() {
+        if (this.currentPlayInfo.id == "default") { return; }
+
+        this.isLoading = true;
+        getLyricSource(this.currentPlayInfo, (lrc) => {
+            console.log(lrc);
+
+            if (!lrc || lrc == "") {
+                uni.showToast({
+                    title: "未获取到歌词",
+                    icon: "none"
+                });
+                this.isLoading = false;
+                return;
+            }
+
+            // uni.showModal({
+            //     title: '歌词',
+            //     content: lrc.replace(/\\n/g, "<br>").replace(/\[[^\]]*\]/g, '')
+            // });
+            this.showLyricFlag = true;
+            this.currentLyric_Original = lrc;
+            this.currentLyric = lrc.replace(/\n/g, '<br/>').replace(/\[[^\]]*\]/g, '');
+
+            this.isLoading = false;
+        });
+    },
+    copyLyric() {
+        uni.setClipboardData({
+            data: this.currentLyric_Original,
+            success: () => {
+                uni.showToast({
+                    title: "已复制到剪贴板"
+                });
+            },
+            fail: (err) => {
+                uni.showToast({
+                    title: "未能复制到剪贴板"
+                });
+            }
+        })
+    },
+    saveToCollection() {
+        const storageName = "collection";
+
+        var origStorage = uni.getStorageSync(storageName);
+
+        if (this.currentPlayInfo.id == "default") { return; }
+
+        if (origStorage == "" || !origStorage) {
+            origStorage = [];
+        } else {
+            origStorage = JSON.parse(origStorage);
+        }
+        if (this.jsonContains(origStorage, this.currentPlayInfo)) {
+            uni.showToast({
+                title: "您已收藏。"
+            });
+            return;
+        }
+        origStorage.push(this.currentPlayInfo);
+        uni.setStorageSync(storageName, JSON.stringify(origStorage));
+        uni.showToast({
+            title: "收藏成功！"
+        });
+
+
+        this.getCollectionList();
+    },
+
+    /* 收藏夹 */
+    getCollectionList() {
+        const storageName = "collection";
+
+        var res = uni.getStorageSync(storageName);
+        this.collectionList = [];
+        if (!res || res == "") {
+            this.collectionList = [];
+            uni.setStorageSync(storageName, "[]");
+        } else {
+            this.collectionList = JSON.parse(res);
+        }
+    },
+    delCollectionListItem(idx) {
+        const storageName = "collection";
+
+        uni.showModal({
+            title: "从收藏夹删除",
+            editable: false,
+            content: "确定要删除该歌曲吗？" + this.collectionList[idx].name,
+            cancelText: "取消",
+            confirmText: "确定",
+            success: (res) => {
+                if (res.cancel) { return; }
+                this.collectionList.splice(idx, 1);
+                uni.setStorageSync(storageName, JSON.stringify(this.collectionList));
+
+                uni.showToast({ title: "已删除" });
+                this.refreshList();
+            }
+        });
+    },
+    refreshCollectionSource() {
+        const storageName = "collection";
+        (async () => {
+            for (let i = 0; i < this.collectionList.length; i++) {
+                const key = await getMusicSourcePromise(this.collectionList[i], this.playQuality);
+                this.collectionList[i] = key;
+                this.collectionRefresherText = (i + 1) + "/" + this.collectionList.length;
+            }
+
+            setTimeout(() => {
+                uni.setStorageSync(storageName, JSON.stringify(this.collectionList));
+
+                uni.showToast({
+                    title: "更新完成"
+                });
+
+                this.collectionRefresherText = '';
+            }, 500);
+        })();
+    },
+    importCollection() {
+        uni.getClipboardData({
+            success: (res) => {
+                try {
+                    var cdata = JSON.stringify(JSON.parse(res.data));
+                    uni.setStorageSync('collection', cdata);
+                    uni.showToast({ title: "已从剪贴板恢复" });
+
+                    this.getCollectionList();
+                } catch (e) {
+                    console.log(e)
+                    uni.showToast({ title: "不是有效的数据" });
+                }
+            },
+            fail: (err) => {
+                uni.showToast({ title: "读取失败" });
+                let tmpdata = prompt("【无法获取剪贴板】请将数据粘贴到输入框", "");
+                if (tmpdata) {
+                    try {
+                        var cdata = JSON.stringify(JSON.parse(tmpdata));
+                        uni.setStorageSync('collection', cdata);
+                        uni.showToast({ title: "已从剪贴板恢复" });
+
+                        this.getCollectionList();
+                    } catch (e) {
+                        uni.showToast({ title: "不是有效的数据" });
+                    }
+                }
+            }
+        });
+    },
+    exportCollection() {
+        uni.setClipboardData({
+            data: uni.getStorageSync("collection"),
+            success: () => {
+                uni.showToast({ title: "已复制到剪贴板" });
+            },
+            fail: (err) => {
+                uni.showToast({ title: "未能复制到剪贴板" });
+            }
+        });
+    },
+
+    /* 初始 */
+    mounted() {
+        this.getCollectionList();
+
+        // 隐藏加载球
+        document.querySelector('#loadingToast').style.display = 'none';
+    }
+}).mount('#app');
