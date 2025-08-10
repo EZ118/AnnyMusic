@@ -38,8 +38,6 @@ var netease = {
         $.get("https://music.163.com/api/song/lyric?id=" + id + "&lv=-1&kv=-1&tv=-1", function(res) {
             var reqData = JSON.parse(res);
             callback(reqData.lrc.lyric);
-        }, function() {
-            callback("暂无");
         });
     }
 }
@@ -133,7 +131,7 @@ var kuwo = {
         });
     },
     getLyricSource: function (id, callback) {
-        $.get(`https://m.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${id}&httpsStatus=1&plat=web_www&from=`, function(res) {
+        $.get(`https://www.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${id}&httpsStatus=1&plat=web_www&from=`, function(res) {
             var reqData = JSON.parse(res);
             var lrc = reqData.data.lrclist;
             var lrcStr = "";
@@ -149,8 +147,6 @@ var kuwo = {
                 lrcStr += `[${min}:sec] ${item.lineLyric}\n`;
             });
             callback(lrcStr);
-        }, function() {
-            callback("暂无");
         });
     }
 }

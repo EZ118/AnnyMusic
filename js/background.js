@@ -2,7 +2,7 @@
 chrome.runtime.onInstalled.addListener(function () {
     const version = chrome.runtime.getManifest().version;
     chrome.tabs.create({
-        url: `https://ez118.github.io/annymusic/installed.html#${version}`
+        url: `installed.html#${version}`
     });
 });
 

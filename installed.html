@@ -5,196 +5,26 @@
     <meta name="referrer" content="no-referrer" />
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
     
-	<title>AnnyMusic</title>
-	<meta name="keywords" content="EZ118,AnnyMusic,AnyMusic,music,音乐,listen1,洛雪,lx,luoxue" />
-	<meta name='description' content="兼容洛雪音乐源的音乐播放器（不内置音源）" />
+	<title>欢迎使用 AnnyMusic</title>
     
 	<link rel="icon" type="image/png" href="./img/icon_64x64.png">
 	<link rel="stylesheet" type="text/css" href="./css/material-theme.css">
 	<link rel="stylesheet" type="text/css" href="./css/material.css">
-	<link rel="stylesheet" type="text/css" href="./css/home.css">
     
 	<script src="./js/vendor/jquery.min.js"></script>
 	<script src="./js/vendor/petite-vue-csp.iife.js"></script>
-	<script src="./js/vendor/sval.min.js"></script>
 </head>
 <body>
-    
-	<div class="m-page-container" id="app" v-scope style="flex-wrap:nowrap;" v-effect="mounted()">
-		<!-- 加载球 -->
-		<div id="loadingToast" style="display:flex"></div>
-		<img src="./img/loading.svg" class="m-icon"
-			style="position:fixed;top:50%;left:50%;z-index:1003;width:30px;height:30px;" v-show="isLoading" />
-
-		<!-- 侧边栏 -->
-		<div class="m-navbar">
-			<img src="./img/icon_128x128.png" alt="logo" class="m-navbar-logo">
-
-			<div v-for="item in navbarItems" :key="item.param"
-				:class="['m-navbar-item', { selected: currentPageView === item.param }]" @click="switchNav(item)">
-
-				<i class="m-icon" v-html="item.icon"></i>
-
-				<span class="m-navbar-item-title">{{ item.name }}</span>
-			</div>
-		</div>
-
-		<!-- 搜索页 -->
-		<div v-show="currentPageView === 'search'" class="search-view">
-			<!-- LOGO -->
-			<img src="./img/logo.png" style="width:150px; margin:15px 0 0 25px;" /><br />
-
-			<!-- 搜索框 -->
-			<div class="m-search" style="position:relative;top:0px;left:15px;width:60vw;">
-
-				<input type="text" class="m-search-input" placeholder="键入以搜索..." v-model="currentSearchWord"
-					@keyup.enter="doSearch()" />
-
-				<button class="m-search-submit" @click="doSearch()"><i class="m-icon" v-html="ICON.search"></i></button>
-			</div>
-
-			<!-- 平台切换 -->
-			<div class="m-tab"
-				style="position:relative;top:4px;left:24px;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;">
-				<div class="m-tab-item" @click="currentSearchPlatform = 'netease'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'netease' }">易</div>
-				<div class="m-tab-item" @click="currentSearchPlatform = 'qq'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'qq' }">Q</div>
-				<div class="m-tab-item" @click="currentSearchPlatform = 'kuwo'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'kuwo' }">我</div>
-				<div class="m-tab-item" @click="currentSearchPlatform = 'kugou'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'kugou' }">狗</div>
-			</div>
-
-			<!-- 搜索结果 -->
-			<div class="m-list"
-				style="position:relative;top:10px;left:24px;width:calc(60vw + 15px); max-height:calc(100vh - 175px);"
-				v-if="currentSearchResult.length > 0">
-				<div class="m-list-item" v-for="item in currentSearchResult" :key="item.id" @click="playMusic(item)">
-					<div class="m-list-item-title">
-						{{ item.name }}
-						<label v-if="item.vip" class="m-list-item-tag">VIP</label>
-					</div>
-					<div class="m-list-item-subtitle">{{ item.artist }}</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- 播放器 -->
-		<div v-show="currentPageView === 'player'" class="player-view">
-			<!-- 歌曲封面信息 -->
-			<img :src="currentPlayInfo.cover" class="player-covor" onerror="this.src='./img/default_cover.svg'" />
-			<div class="player-title">{{ currentPlayInfo.name }}</div>
-			<div class="player-artist">{{ currentPlayInfo.artist }}</div>
-			<div class="player-platform">{{ currentPlayInfo.source }}</div>
-
-			<!-- 功能按钮 -->
-			<div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; margin:8px; width:150px;">
-				<button class="m-button-rounded" @click="prevSong()" title="上一首"><i class="m-icon"
-						v-html="ICON.prevSong"></i></button>
-				<button class="m-button-rounded" @click="showPlayListFlag=true" title="播放列表"><i class="m-icon"
-						v-html="ICON.playList"></i></button>
-				<button class="m-button-rounded" @click="nextSong()" title="下一首"><i class="m-icon"
-						v-html="ICON.nextSong"></i></button>
-
-				<button class="m-button-rounded" @click="saveToCollection()" title="收藏"><i class="m-icon"
-						v-html="ICON.star"></i></button>
-				<button class="m-button-rounded" @click="showLyric()" title="歌词"><i class="m-icon"
-						v-html="ICON.lyric"></i></button>
-			</div>
-
-			<!-- 音频控件 -->
-			<div class="m-appbar-bottom" style="position:fixed;bottom:0;left:81px;width:calc(100vw - 81px);">
-				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="player-audio"></audio>
-			</div>
-		</div>
-
-		<!-- 收藏夹 -->
-		<div v-show="currentPageView === 'collection'">
-			<!-- 收藏夹列表 -->
-			<div class="m-list" style="margin:10px; width:calc(100vw - 100px); max-height:calc(100vh - 140px);">
-				<div class="m-list-item" v-for="(item, index) in collectionList" :key="item.id"
-					@click="playMusic(item, 'collection')" @contextmenu.prevent.stop="delCollectionListItem(index)">
-					<div class="m-list-item-title">
-						{{ item.name }}
-						<label v-if="item.vip" class="m-list-item-tag">VIP</label>
-					</div>
-					<div class="m-list-item-subtitle">{{ item.artist }}</div>
-				</div>
-
-				<div class="m-list-item" v-if="collectionList.length === 0">暂无收藏</div>
-			</div>
-
-			<!-- 操作按钮 -->
-			<div style="margin:10px;display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; width:220px;">
-				<button class="m-button" @click="refreshCollectionSource()">更新音乐源</button>
-
-				<button class="m-button-rounded" @click="exportCollection()" title="导出">
-					<i class="m-icon" v-html="ICON.download"></i>
-				</button>
-				<button class="m-button-rounded" @click="importCollection()" title="导入">
-					<i class="m-icon" v-html="ICON.upload"></i>
-				</button>
-
-				<p class="tip-text">
-					· 右键/长按项目可删除<br />
-					· 音乐无法播放时，需更新音乐源<br />
-					· 右侧两个按钮用于导出/导入
-				</p>
-			</div>
-
-			<!-- 更新音乐源弹窗 -->
-			<div class="sourceRefreshMsg" v-if="collectionRefresherText !== ''">
-				<img src="./img/update.png" class="icon" /><br>
-				<div style="display: flex; flex-direction: column; align-items: center;">
-					<span class="title">更新音源中</span>
-					<span class="content">{{ collectionRefresherText }}</span>
-				</div>
-			</div>
-		</div>
-
-		<!-- 播放列表 -->
-		<div class="m-modal-fullscreen" v-if="showPlayListFlag">
-			<div class="m-modal-content">
-				<h1 class="m-modal-title">播放列表</h1>
-				<p class="m-modal-subtitle" @click="if(confirm('是否清空播放列表？')){playList=[];}">「操作播放列表」</p>
-
-				<div class="m-list" style="max-height:calc(100vh - 200px); overflow:auto;">
-					<div class="m-list-item" v-for="(item, index) in playList" :key="index"
-						@click="playMusic(item, 'playlist')" @contextmenu.prevent.stop="delPlayListItem(index)">
-						<div class="m-list-item-title">
-							{{ item.name }}
-							<label v-if="item.vip" class="m-list-item-tag">VIP</label>
-						</div>
-						<div class="m-list-item-subtitle">{{ item.artist }}</div>
-					</div>
-
-					<div class="m-list-item" v-if="playList.length === 0">暂无歌曲</div>
-				</div>
-			</div>
-
-			<button class="m-button" @click="showPlayListFlag = false"
-				style="position:fixed; bottom:15px; right:20px;">关闭</button>
-		</div>
-
-		<!-- 歌词 -->
-		<div class="m-modal-fullscreen" v-if="showLyricFlag" style="overflow:hidden auto;">
-			<div class="m-modal-content">
-				<h1 class="m-modal-title">{{ currentPlayInfo.name }}</h1>
-				<p class="m-modal-subtitle" title="点此复制LRC" @click="copyLyric()">歌曲歌词</p>
-				<p class="m-modal-text" v-html="currentLyric"></p>
-			</div>
-
-			<button class="m-button" @click="showLyricFlag = false"
-				style="position:fixed; bottom:15px; right:20px;">关闭</button>
-		</div>
-	</div>
-
-
-	<script src="./js/icons.js"></script> <!-- 全局图标 -->
-	<script src="./js/util.js"></script> <!-- 工具函数（主要调用CRX的API） -->
-	<script src="./js/lxapi.js"></script> <!-- 洛雪音源API（用于兼容音源） -->
-	<script src="./js/source_api.js"></script> <!-- 内置各平台搜索API（包括调用外部音源） -->
-	<script src="./js/main.js"></script> <!-- 主程序 -->
+    <center>
+        <h1>AnnyMusic 安装成功</h1>
+        <h3>您还需要进行最后的操作</h3>
+        <h3>该扩展需要您授予文件访问权限以获取本地音乐</h3>
+        <hr>
+        <h2>我该怎么做？</h2>
+        <h4>Firefox</h4>
+        进入扩展，找到扩展，允许扩展访问file://
+        <h4>Chrome/Edge</h4>
+        进入扩展，找到扩展，允许扩展访问file://
+    </center>
 </body>
 </html>
