@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" class="mdui-theme-auto">
+<html lang="zh">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="referrer" content="no-referrer" />
@@ -105,7 +105,7 @@
 
 			<!-- 音频控件 -->
 			<div class="m-appbar-bottom" style="position:fixed;bottom:0;left:81px;width:calc(100vw - 81px);">
-				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="player-audio"></audio>
+				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="player-audio" @error="currentPlayInfo.mp3 = currentPlayInfo.mp3.replace('https:','http:')"></audio>
 			</div>
 		</div>
 

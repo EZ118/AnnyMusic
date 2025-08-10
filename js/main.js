@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    $.get("./render_music_source.js", (sourceScript) => {
+    $.get("./ikun_music_source.js", (sourceScript) => {
         const interpreter = new Sval({
             ecmaVer: 'latest',
             sourceType: 'script',

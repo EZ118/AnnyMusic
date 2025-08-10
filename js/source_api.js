@@ -46,10 +46,14 @@ var netease = {
 
 var qq = {
     getSearchResult: function (keyword, callback) {
-        $.post("https://u.y.qq.com/cgi-bin/musicu.fcg", {
+        const queryData = JSON.stringify({
             "comm":{"ct":"19","cv":"1859","uin":"0"},
-            "req":{"method":"DoSearchForQQMusicDesktop","module":"music.search.SearchCgiService","param":{"grp":1,"num_per_page":50,"page_num":1,"query":keyword,"search_type":0}}
-        }, function(res) {
+            "req":{
+                "method":"DoSearchForQQMusicDesktop","module":"music.search.SearchCgiService",
+                "param":{"grp":1,"num_per_page":50,"page_num":1,"query":keyword,"search_type":0}
+            }
+        })
+        $.post("https://u.y.qq.com/cgi-bin/musicu.fcg", queryData, function(res) {
             var reqData = res;
             reqData = reqData.req.data.body.song;
             var newData = [];
