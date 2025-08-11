@@ -11,7 +11,7 @@ chrome.action.onClicked.addListener((tab) => {
     chrome.windows.create({
         url: 'home.html',
         type: "popup",
-        width: 960,
+        width: 512,
         height: 640
     });
 });
