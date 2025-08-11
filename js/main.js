@@ -147,28 +147,31 @@ PetiteVue.createApp({
         this.isLoading = true;
 
         this.currentPageView = 'player';
-        this.currentPlayInfo = item;
+        
+        // 深拷贝当前播放的歌曲信息，避免引用污染
+        const playItem = JSON.parse(JSON.stringify(item));
+        this.currentPlayInfo = playItem;
 
         if (from == "collection") {
-            // 如果是从收藏夹播放，则直接使用收藏夹列表
-            console.log("从收藏夹播放，使用收藏夹列表");
-            this.playList = this.collectionList;
+            // 从收藏夹播放：创建收藏夹的副本，而不是直接引用
+            console.log("从收藏夹播放，使用收藏夹列表副本");
+            this.playList = JSON.parse(JSON.stringify(this.collectionList));
             this.isLoading = false;
             return;
-
         } else if (from == "playlist" || this.jsonContains(this.playList, this.currentPlayInfo)) {
             // 如果当前播放列表中已存在该歌曲，则不重复添加
             console.log("当前播放列表中已存在该歌曲，跳过添加");
             this.isLoading = false;
             return;
-
         } else {
-            getMusicSource(item, this.playQuality, (res) => {
-                this.currentPlayInfo = res;
+            getMusicSource(playItem, this.playQuality, (res) => {
+                // 深拷贝结果
+                const result = JSON.parse(JSON.stringify(res));
+                this.currentPlayInfo = result;
                 this.isLoading = false;
 
-                // 播放列表
-                this.playList.push(res);
+                // 播放列表添加副本
+                this.playList.push(result);
 
                 console.log("当前播放列表：", this.playList);
             });
@@ -231,27 +234,28 @@ PetiteVue.createApp({
     saveToCollection() {
         const storageName = "collection";
 
-        var origStorage = uni.getStorageSync(storageName);
-
         if (this.currentPlayInfo.id == "default") { return; }
 
-        if (origStorage == "" || !origStorage) {
+        let origStorage = uni.getStorageSync(storageName);
+
+        if (!origStorage || origStorage === "") {
             origStorage = [];
         } else {
             origStorage = JSON.parse(origStorage);
         }
-        if (this.jsonContains(origStorage, this.currentPlayInfo)) {
-            uni.showToast({
-                title: "您已收藏。"
-            });
+
+        // 深拷贝当前播放信息，避免引用污染
+        const songToSave = JSON.parse(JSON.stringify(this.currentPlayInfo));
+
+        if (this.jsonContains(origStorage, songToSave)) {
+            uni.showToast({ title: "您已收藏。" });
             return;
         }
-        origStorage.push(this.currentPlayInfo);
-        uni.setStorageSync(storageName, JSON.stringify(origStorage));
-        uni.showToast({
-            title: "收藏成功！"
-        });
 
+        origStorage.push(songToSave);
+        uni.setStorageSync(storageName, JSON.stringify(origStorage));
+
+        uni.showToast({ title: "收藏成功！" });
 
         this.getCollectionList();
     },
@@ -259,15 +263,17 @@ PetiteVue.createApp({
     /* 收藏夹 */
     getCollectionList() {
         const storageName = "collection";
-
         var res = uni.getStorageSync(storageName);
-        this.collectionList = [];
+        
         if (!res || res == "") {
             this.collectionList = [];
             uni.setStorageSync(storageName, "[]");
         } else {
             this.collectionList = JSON.parse(res);
         }
+        
+        // 确保每次获取时都是新的数组引用，避免意外修改
+        this.collectionList = JSON.parse(JSON.stringify(this.collectionList));
     },
     delCollectionListItem(idx) {
         const storageName = "collection";
@@ -291,13 +297,18 @@ PetiteVue.createApp({
     refreshCollectionSource() {
         const storageName = "collection";
         (async () => {
-            for (let i = 0; i < this.collectionList.length; i++) {
-                const key = await getMusicSourcePromise(this.collectionList[i], this.playQuality);
-                this.collectionList[i] = key;
-                this.collectionRefresherText = (i + 1) + "/" + this.collectionList.length;
+            // 创建副本进行操作
+            const tempList = JSON.parse(JSON.stringify(this.collectionList));
+            
+            for (let i = 0; i < tempList.length; i++) {
+                const key = await getMusicSourcePromise(tempList[i], this.playQuality);
+                tempList[i] = JSON.parse(JSON.stringify(key));
+                this.collectionRefresherText = (i + 1) + "/" + tempList.length;
             }
 
+            // 更新完成后才保存
             setTimeout(() => {
+                this.collectionList = tempList;  // 更新引用
                 uni.setStorageSync(storageName, JSON.stringify(this.collectionList));
 
                 uni.showToast({
