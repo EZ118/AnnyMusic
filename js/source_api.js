@@ -35,7 +35,7 @@ var netease = {
         });
     },
     getLyricSource: function (id, callback) {
-        $.get("https://music.163.com/api/song/lyric?id=" + id + "&lv=-1&kv=-1&tv=-1", function(res) {
+        $.get(`https://music.163.com/api/song/lyric?id=${id}&lv=-1&kv=-1&tv=-1`, function(res) {
             var reqData = JSON.parse(res);
             callback(reqData.lrc.lyric);
         });
@@ -144,7 +144,7 @@ var kuwo = {
                 if (min < 10) { min = "0" + min; }
                 if (sec < 10) { sec = "0" + sec; }
 
-                lrcStr += `[${min}:sec] ${item.lineLyric}\n`;
+                lrcStr += `[${min}:${sec}] ${item.lineLyric}\n`;
             });
             callback(lrcStr);
         });

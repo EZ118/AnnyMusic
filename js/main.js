@@ -9,8 +9,7 @@ $(document).ready(() => {
         interpreter.import({ lx: LxApi });
 
         interpreter.run(sourceScript)
-        
-    })
+    });
 });
 
 document.addEventListener('touchstart', function (event) {
@@ -198,8 +197,6 @@ PetiteVue.createApp({
 
         this.isLoading = true;
         getLyricSource(this.currentPlayInfo, (lrc) => {
-            console.log(lrc);
-
             if (!lrc || lrc == "") {
                 uni.showToast({
                     title: "未获取到歌词",
@@ -209,10 +206,6 @@ PetiteVue.createApp({
                 return;
             }
 
-            // uni.showModal({
-            //     title: '歌词',
-            //     content: lrc.replace(/\\n/g, "<br>").replace(/\[[^\]]*\]/g, '')
-            // });
             this.showLyricFlag = true;
             this.currentLyric_Original = lrc;
             this.currentLyric = lrc.replace(/\n/g, '<br/>').replace(/\[[^\]]*\]/g, '');
@@ -363,6 +356,6 @@ PetiteVue.createApp({
         this.getCollectionList();
 
         // 隐藏加载球
-        document.querySelector('#loadingToast').style.display = 'none';
+        $('#loadingToast').hide();
     }
 }).mount('#app');

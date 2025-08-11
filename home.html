@@ -14,7 +14,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/material.css">
 	<link rel="stylesheet" type="text/css" href="./css/home.css">
     
-	<script src="./js/vendor/jquery.min.js"></script>
+	<script src="./js/vendor/zepto.min.js"></script>
 	<script src="./js/vendor/petite-vue-csp.iife.js"></script>
 	<script src="./js/vendor/sval.min.js"></script>
 </head>
@@ -57,13 +57,13 @@
 			<div class="m-tab"
 				style="position:relative;top:4px;left:24px;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;">
 				<div class="m-tab-item" @click="currentSearchPlatform = 'netease'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'netease' }">易</div>
+					:class="{ selected: currentSearchPlatform === 'netease' }">网易</div>
 				<div class="m-tab-item" @click="currentSearchPlatform = 'qq'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'qq' }">Q</div>
+					:class="{ selected: currentSearchPlatform === 'qq' }">QQ</div>
 				<div class="m-tab-item" @click="currentSearchPlatform = 'kuwo'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'kuwo' }">我</div>
+					:class="{ selected: currentSearchPlatform === 'kuwo' }">酷我</div>
 				<div class="m-tab-item" @click="currentSearchPlatform = 'kugou'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'kugou' }">狗</div>
+					:class="{ selected: currentSearchPlatform === 'kugou' }">酷狗</div>
 			</div>
 
 			<!-- 搜索结果 -->
@@ -83,7 +83,7 @@
 		<!-- 播放器 -->
 		<div v-show="currentPageView === 'player'" class="player-view">
 			<!-- 歌曲封面信息 -->
-			<img :src="currentPlayInfo.cover" class="player-covor" onerror="this.src='./img/default_cover.svg'" />
+			<img :src="currentPlayInfo.cover" class="player-covor" @error="this.src='./img/default_cover.svg'" />
 			<div class="player-title">{{ currentPlayInfo.name }}</div>
 			<div class="player-artist">{{ currentPlayInfo.artist }}</div>
 			<div class="player-platform">{{ currentPlayInfo.source }}</div>
@@ -104,8 +104,8 @@
 			</div>
 
 			<!-- 音频控件 -->
-			<div class="m-appbar-bottom" style="position:fixed;bottom:0;left:81px;width:calc(100vw - 81px);">
-				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="player-audio" @error="currentPlayInfo.mp3 = currentPlayInfo.mp3.replace('https:','http:')"></audio>
+			<div class="m-appbar-bottom" style="position:fixed;bottom:0;left:80px;width:calc(100vw - 80px);">
+				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="player-audio" @error="currentPlayInfo.mp3=currentPlayInfo.mp3.replace('https:','http:')"></audio>
 			</div>
 		</div>
 

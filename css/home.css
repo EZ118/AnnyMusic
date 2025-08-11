@@ -4,12 +4,12 @@ body {
     margin: 0;
     -webkit-appearance: none !important;
     overscroll-behavior: none;
-    touch-action:pan-x pan-y;
+    touch-action: pan-x pan-y;
     font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
 .m-page-container {
-    background-image: url("../assets/default_bg.svg");
+    background-image: url("../img/default_bg.svg");
     background-repeat: no-repeat;
     background-position: right bottom;
     background-size: 300px;
@@ -20,7 +20,6 @@ body {
 
     display: flex;
     flex-direction: row;
-
 }
 
 .player-view {
@@ -38,7 +37,6 @@ body {
     max-width: 200px;
     border-radius: 12px;
     -webkit-user-drag: none;
-
 
     aspect-ratio: 1/1;
 }
