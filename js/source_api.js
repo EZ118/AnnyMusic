@@ -17,9 +17,7 @@ var netease = {
                         "mp3": "",
                         "vip": card.fee
                     });
-                } catch (e) {
-                    console.log("ERR: 列表有一项加载失败")
-                }
+                } catch {}
             });
 
             callback(newData);
@@ -70,9 +68,7 @@ var qq = {
                         "mp3": "",
                         "vip": card.vip
                     });
-                } catch (e) {
-                    console.log("ERR: 列表有一项加载失败")
-                }
+                } catch {}
             });
             callback(newData);
         }, 'json');
@@ -87,10 +83,6 @@ var qq = {
         });
     },
     getLyricSource: function (id, callback) {
-        /*
-        由于功能需要，该api的对接使用了  https://www.toolscat.com/dev/postman  后端请求接口代理实现
-        QQ官方接口有Referer判断，而uniapp不能修改关键的header
-        */
         $.get('https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?format=json&nobase64=1&songmid=' + id, function(res) {
             callback(JSON.parse(res).lyric);
         }, function() {
@@ -170,9 +162,7 @@ var kugou = {
                         "mp3": "",
                         "vip": card.privilege
                     });
-                } catch (e) {
-                    console.log("ERR: 列表有一项加载失败")
-                }
+                } catch {}
             });
 
             callback(newData);

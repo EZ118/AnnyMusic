@@ -55,23 +55,6 @@ function removeStorage(key, callback) {
     });
 }
 
-function getConfig(item, callback) {
-    // 获取扩展设置项（item示例：player.HD_Quality_As_Default）
-    const itemFamily = item.split(".")[0];
-    const itemKey = item.split(".")[1];
-    chrome.storage.local.get([itemFamily], (result) => {
-        try {
-            if (result[itemFamily] && result[itemFamily][itemKey]) {
-                callback(result[itemFamily][itemKey].value);
-            } else {
-                callback(null);
-            }
-        } catch {
-            callback(null);
-        }
-    });
-}
-
 function areKeysEqual(dict1, dict2) {
     // 比较两个对象的键是否相同
     const keys1 = Object.keys(dict1);
@@ -90,6 +73,7 @@ function areKeysEqual(dict1, dict2) {
 }
 
 function formatDuration(seconds) {
+    // 秒数转时间
     let hours = parseInt(seconds / 3600);
     let minutes = parseInt((seconds % 3600) / 60);
     let secondsLeft = seconds % 60;
@@ -107,6 +91,7 @@ function formatDuration(seconds) {
 }
 
 function minimizeWindow() {
+    // 最小化窗口
     chrome.windows.getCurrent({ populate: false }, function (currentWindow) {
         chrome.windows.update(currentWindow.id, { state: "minimized" });
     });

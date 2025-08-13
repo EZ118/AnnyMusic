@@ -259,6 +259,15 @@ PetiteVue.createApp({
 
         this.getCollectionList();
     },
+    
+    handleMusicError() {
+        // 处理播放器音源加载错误（部分音源会有SSL证书错误）
+        if(this.currentPlayInfo.source == "kuwo") {
+            this.currentPlayInfo.mp3 = this.currentPlayInfo.mp3.replace(/:\/\/([^.]+)\.sycdn\.kuwo\.cn\//, '://$1-sycdn.kuwo.cn/');
+        } else {
+            this.currentPlayInfo.mp3 = this.currentPlayInfo.mp3.replace('https://','http://');
+        }
+    },
 
     /* 收藏夹 */
     getCollectionList() {
@@ -290,7 +299,7 @@ PetiteVue.createApp({
                 uni.setStorageSync(storageName, JSON.stringify(this.collectionList));
 
                 uni.showToast({ title: "已删除" });
-                this.refreshList();
+                this.getCollectionList();
             }
         });
     },
@@ -301,9 +310,8 @@ PetiteVue.createApp({
             const tempList = JSON.parse(JSON.stringify(this.collectionList));
             
             for (let i = 0; i < tempList.length; i++) {
-                const key = await getMusicSourcePromise(tempList[i], this.playQuality);
-                tempList[i] = JSON.parse(JSON.stringify(key));
-                this.collectionRefresherText = (i + 1) + "/" + tempList.length;
+                this.collectionRefresherText = `${(i + 1)} / ${tempList.length}`;
+                tempList[i] = await getMusicSourcePromise(tempList[i], this.playQuality);
             }
 
             // 更新完成后才保存
@@ -367,6 +375,6 @@ PetiteVue.createApp({
         this.getCollectionList();
 
         // 隐藏加载球
-        $('#loadingToast').hide();
+        $('#loaderCover').hide();
     }
 }).mount('#app');

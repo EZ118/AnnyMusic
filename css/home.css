@@ -8,6 +8,30 @@ body {
     font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 }
 
+
+#app {
+    flex-wrap:nowrap;
+}
+
+#loaderCover {
+    position: fixed;
+    z-index: 1002;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vw;
+    background-color: var(--s-color-surface-container);
+}
+
+.loaderBall {
+    position:fixed;
+    z-index:1003;
+    top:calc(50% - 15px);
+    left:calc(50% - 15px);
+    width:30px;
+    height:30px;
+}
+
 .m-page-container {
     background-image: url("../img/default_bg.svg");
     background-repeat: no-repeat;
@@ -22,7 +46,54 @@ body {
     flex-direction: row;
 }
 
-.player-view {
+.tip-text {
+    color: var(--s-color-on-surface-variant);
+    font-size: small;
+    margin: 1px 5px;
+}
+
+.m-modal-subtitle {
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* =========== */
+
+.searchView .topLogo {
+    display:block;
+    width:150px;
+    margin:15px 0 0 25px;
+}
+
+.searchView .searchBar {
+    position:relative;
+    top:0px;
+    left:15px;
+    width:60vw;
+}
+
+.searchView .searchSourceTab {
+    position:relative;
+    top:4px;
+    left:24px;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:8px;
+}
+
+.searchView .searchResults {
+    position:relative;
+    top:10px;
+    left:24px;
+    width:calc(60vw + 15px);
+    max-height:calc(100vh - 175px);
+}
+
+/* ======== */
+
+.playerView {
     height: 100vh;
     box-sizing: border-box;
     padding-bottom: 64px;
@@ -31,7 +102,7 @@ body {
     flex-wrap: wrap;
 }
 
-.player-covor {
+.playerView .covor {
     margin: 10px;
     width: 50vh;
     max-width: 200px;
@@ -41,28 +112,44 @@ body {
     aspect-ratio: 1/1;
 }
 
-.player-title {
+.playerView .title {
     font-size: 1.5rem;
     font-weight: 500;
     margin: 10px;
     color: var(--s-color-on-background);
 }
 
-.player-artist {
+.playerView .artist {
     font-size: 1rem;
     font-weight: 400;
     margin: 10px;
     color: var(--s-color-on-background);
 }
 
-.player-platform {
+.playerView .source {
     font-size: 0.8rem;
     font-weight: 300;
     margin: 10px;
     color: var(--s-color-on-background);
 }
 
-.player-audio {
+.playerView .ctrlButtons {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:8px;
+    width:150px;
+}
+
+.playerView .audioBar {
+    position:fixed;
+    bottom:0;
+    left:80px;
+    width:calc(100vw - 80px);
+}
+
+.playerView .audio {
     width: calc(100vw - 100px);
     margin: 10px;
     max-width: 500px;
@@ -70,10 +157,23 @@ body {
     border-radius: 20px;
 }
 
+/* =========== */
+.collectionView .collectionList {
+    margin:10px;
+    width:calc(100vw - 100px);
+    max-height:calc(100vh - 140px);
+}
 
+.collectionView .ctrlButtons {
+    margin:10px;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:8px;
+    width:220px;
+}
 
-
-.sourceRefreshMsg {
+.collectionView .sourceUpdateMsg {
     position: fixed;
     bottom: 20px;
     left: 80px;
@@ -92,50 +192,48 @@ body {
     justify-content: right;
 }
 
-.sourceRefreshMsg .title {
-    font-size: 12px;
-    font-weight: 400;
-}
-
-.sourceRefreshMsg .content {
-    font-size: 12px;
-    color: inherit;
-}
-
-.sourceRefreshMsg .icon {
+.collectionView .sourceUpdateMsg .left {
     width: 30px;
     height: 30px;
     margin-right: 10px;
 }
 
+.collectionView .sourceUpdateMsg .right {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
 
+.collectionView .sourceUpdateMsg .right .title {
+    font-size: 12px;
+    font-weight: 400;
+}
 
-#loadingToast {
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    z-index: 1002;
-    width: 100%;
-    height: 100%;
-    background-color: var(--s-color-surface-container);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+.collectionView .sourceUpdateMsg .right .content {
+    font-size: 12px;
+    color: inherit;
 }
 
 
-
-
-.tip-text {
-    color: var(--s-color-on-surface-variant);
-    font-size: small;
-    margin: 1px 5px;
+/* ============ */
+.playlistView .playList {
+    max-height:calc(100vh - 200px);
+    overflow:auto;
 }
 
-.m-modal-subtitle {
-    text-decoration: underline;
-    cursor: pointer;
-    font-weight: bold;
+.playlistView .closeBtn {
+    position:fixed;
+    bottom:15px;
+    right:20px;
+}
+
+/* ============ */
+.lyricView {
+    overflow:hidden auto;
+}
+
+.lyricView .closeBtn {
+    position:fixed;
+    bottom:15px;
+    right:20px;
 }

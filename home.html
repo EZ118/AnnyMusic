@@ -19,58 +19,47 @@
 	<script src="./js/vendor/sval.min.js"></script>
 </head>
 <body>
-    
-	<div class="m-page-container" id="app" v-scope style="flex-wrap:nowrap;" v-effect="mounted()">
+	<div class="m-page-container" id="app" v-scope v-effect="mounted()">
 		<!-- 加载球 -->
-		<div id="loadingToast" style="display:flex"></div>
-		<img src="./img/loading.svg" class="m-icon"
-			style="position:fixed;top:50%;left:50%;z-index:1003;width:30px;height:30px;" v-show="isLoading" />
+		<div id="loaderCover"></div>
+		<img class="loaderBall m-icon" src="./img/loading.svg" v-show="isLoading" />
 
 		<!-- 侧边栏 -->
 		<div class="m-navbar">
 			<img src="./img/icon_128x128.png" alt="logo" class="m-navbar-logo">
 
-			<div v-for="item in navbarItems" :key="item.param"
-				:class="['m-navbar-item', { selected: currentPageView === item.param }]" @click="switchNav(item)">
-
+			<div v-for="item in navbarItems" :class="['m-navbar-item', { selected: currentPageView === item.param }]" @click="switchNav(item)">
 				<i class="m-icon" v-html="item.icon"></i>
-
 				<span class="m-navbar-item-title">{{ item.name }}</span>
 			</div>
 		</div>
 
 		<!-- 搜索页 -->
-		<div v-show="currentPageView === 'search'" class="search-view">
+		<div v-show="currentPageView == 'search'" class="searchView">
 			<!-- LOGO -->
-			<img src="./img/logo.png" style="width:150px; margin:15px 0 0 25px;" /><br />
+			<img src="./img/logo.png" class="topLogo"/>
 
 			<!-- 搜索框 -->
-			<div class="m-search" style="position:relative;top:0px;left:15px;width:60vw;">
-
-				<input type="text" class="m-search-input" placeholder="键入以搜索..." v-model="currentSearchWord"
-					@keyup.enter="doSearch()" />
-
+			<div class="m-search searchBar">
+				<input type="text" class="m-search-input" placeholder="键入以搜索..." v-model="currentSearchWord" @keyup.enter="doSearch()" />
 				<button class="m-search-submit" @click="doSearch()"><i class="m-icon" v-html="ICON.search"></i></button>
 			</div>
 
 			<!-- 平台切换 -->
-			<div class="m-tab"
-				style="position:relative;top:4px;left:24px;display:flex;flex-direction:row;flex-wrap:wrap;gap:8px;">
-				<div class="m-tab-item" @click="currentSearchPlatform = 'netease'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'netease' }">网易</div>
-				<div class="m-tab-item" @click="currentSearchPlatform = 'qq'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'qq' }">QQ</div>
-				<div class="m-tab-item" @click="currentSearchPlatform = 'kuwo'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'kuwo' }">酷我</div>
-				<div class="m-tab-item" @click="currentSearchPlatform = 'kugou'; doSearch();"
-					:class="{ selected: currentSearchPlatform === 'kugou' }">酷狗</div>
+			<div class="m-tab searchSourceTab">
+				<div :class="['m-tab-item', { selected: currentSearchPlatform=='netease' }]"
+                    @click="currentSearchPlatform='netease'; doSearch();">网易</div>
+				<div :class="['m-tab-item', { selected: currentSearchPlatform=='qq' }]"
+					@click="currentSearchPlatform='qq'; doSearch();">QQ</div>
+				<div :class="['m-tab-item', { selected: currentSearchPlatform=='kuwo' }]"
+					@click="currentSearchPlatform='kuwo'; doSearch();">酷我</div>
+				<div :class="['m-tab-item', { selected: currentSearchPlatform=='kugou' }]"
+					@click="currentSearchPlatform='kugou'; doSearch();">酷狗</div>
 			</div>
 
 			<!-- 搜索结果 -->
-			<div class="m-list"
-				style="position:relative;top:10px;left:24px;width:calc(60vw + 15px); max-height:calc(100vh - 175px);"
-				v-if="currentSearchResult.length > 0">
-				<div class="m-list-item" v-for="item in currentSearchResult" :key="item.id" @click="playMusic(item)">
+			<div class="m-list searchResults" v-if="currentSearchResult.length > 0">
+				<div class="m-list-item" v-for="item in currentSearchResult" @click="playMusic(item)">
 					<div class="m-list-item-title">
 						{{ item.name }}
 						<label v-if="item.vip" class="m-list-item-tag">VIP</label>
@@ -81,38 +70,43 @@
 		</div>
 
 		<!-- 播放器 -->
-		<div v-show="currentPageView === 'player'" class="player-view">
+		<div v-show="currentPageView == 'player'" class="playerView">
 			<!-- 歌曲封面信息 -->
-			<img :src="currentPlayInfo.cover" class="player-covor" @error="this.src='./img/default_cover.svg'" />
-			<div class="player-title">{{ currentPlayInfo.name }}</div>
-			<div class="player-artist">{{ currentPlayInfo.artist }}</div>
-			<div class="player-platform">{{ currentPlayInfo.source }}</div>
+			<img :src="currentPlayInfo.cover" class="covor" @error="this.src='./img/default_cover.svg'" />
+			<div class="title">{{ currentPlayInfo.name }}</div>
+			<div class="artist">{{ currentPlayInfo.artist }}</div>
+			<div class="source">{{ currentPlayInfo.source }}</div>
 
 			<!-- 功能按钮 -->
-			<div style="display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; margin:8px; width:150px;">
-				<button class="m-button-rounded" @click="prevSong()" title="上一首"><i class="m-icon"
-						v-html="ICON.prevSong"></i></button>
-				<button class="m-button-rounded" @click="showPlayListFlag=true" title="播放列表"><i class="m-icon"
-						v-html="ICON.playList"></i></button>
-				<button class="m-button-rounded" @click="nextSong()" title="下一首"><i class="m-icon"
-						v-html="ICON.nextSong"></i></button>
+			<div class="ctrlButtons">
+				<button class="m-button-rounded" @click="prevSong()" title="上一首">
+                    <i class="m-icon" v-html="ICON.prevSong"></i>
+                </button>
+				<button class="m-button-rounded" @click="showPlayListFlag=true" title="播放列表">
+                    <i class="m-icon" v-html="ICON.playList"></i>
+                </button>
+				<button class="m-button-rounded" @click="nextSong()" title="下一首">
+                    <i class="m-icon" v-html="ICON.nextSong"></i>
+                </button>
 
-				<button class="m-button-rounded" @click="saveToCollection()" title="收藏"><i class="m-icon"
-						v-html="ICON.star"></i></button>
-				<button class="m-button-rounded" @click="showLyric()" title="歌词"><i class="m-icon"
-						v-html="ICON.lyric"></i></button>
+				<button class="m-button-rounded" @click="saveToCollection()" title="收藏">
+                    <i class="m-icon" v-html="ICON.star"></i>
+                </button>
+				<button class="m-button-rounded" @click="showLyric()" title="歌词">
+                    <i class="m-icon" v-html="ICON.lyric"></i>
+                </button>
 			</div>
 
 			<!-- 音频控件 -->
-			<div class="m-appbar-bottom" style="position:fixed;bottom:0;left:80px;width:calc(100vw - 80px);">
-				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="player-audio" @error="currentPlayInfo.mp3=currentPlayInfo.mp3.replace('https:','http:')"></audio>
+			<div class="m-appbar-bottom audioBar">
+				<audio controls autoplay :src="currentPlayInfo.mp3" @ended="nextSong()" class="audio" @error="handleMusicError()"></audio>
 			</div>
 		</div>
 
 		<!-- 收藏夹 -->
-		<div v-show="currentPageView === 'collection'">
+		<div v-show="currentPageView == 'collection'" class="collectionView">
 			<!-- 收藏夹列表 -->
-			<div class="m-list" style="margin:10px; width:calc(100vw - 100px); max-height:calc(100vh - 140px);">
+			<div class="m-list collectionList">
 				<div class="m-list-item" v-for="(item, index) in collectionList" :key="item.id"
 					@click="playMusic(item, 'collection')" @contextmenu.prevent.stop="delCollectionListItem(index)">
 					<div class="m-list-item-title">
@@ -126,7 +120,7 @@
 			</div>
 
 			<!-- 操作按钮 -->
-			<div style="margin:10px;display:flex; flex-direction:row; flex-wrap:wrap; gap:8px; width:220px;">
+			<div class="ctrlButtons">
 				<button class="m-button" @click="refreshCollectionSource()">更新音乐源</button>
 
 				<button class="m-button-rounded" @click="exportCollection()" title="导出">
@@ -137,16 +131,16 @@
 				</button>
 
 				<p class="tip-text">
-					· 右键/长按项目可删除<br />
-					· 音乐无法播放时，需更新音乐源<br />
+					· 右键/长按项目可删除<br>
+					· 音乐无法播放时，需更新音乐源<br>
 					· 右侧两个按钮用于导出/导入
 				</p>
 			</div>
 
 			<!-- 更新音乐源弹窗 -->
-			<div class="sourceRefreshMsg" v-if="collectionRefresherText !== ''">
-				<img src="./img/update.png" class="icon" /><br>
-				<div style="display: flex; flex-direction: column; align-items: center;">
+			<div class="sourceUpdateMsg" v-if="collectionRefresherText != ''">
+				<i class="left m-icon" v-html="ICON.sync"></i>
+				<div class="right">
 					<span class="title">更新音源中</span>
 					<span class="content">{{ collectionRefresherText }}</span>
 				</div>
@@ -154,14 +148,13 @@
 		</div>
 
 		<!-- 播放列表 -->
-		<div class="m-modal-fullscreen" v-if="showPlayListFlag">
+		<div class="playlistView m-modal-fullscreen" v-if="showPlayListFlag">
 			<div class="m-modal-content">
 				<h1 class="m-modal-title">播放列表</h1>
 				<p class="m-modal-subtitle" @click="if(confirm('是否清空播放列表？')){playList=[];}">「操作播放列表」</p>
 
-				<div class="m-list" style="max-height:calc(100vh - 200px); overflow:auto;">
-					<div class="m-list-item" v-for="(item, index) in playList" :key="index"
-						@click="playMusic(item, 'playlist')" @contextmenu.prevent.stop="delPlayListItem(index)">
+				<div class="m-list playList">
+					<div class="m-list-item" v-for="(item, index) in playList" :key="index" @click="playMusic(item, 'playlist')">
 						<div class="m-list-item-title">
 							{{ item.name }}
 							<label v-if="item.vip" class="m-list-item-tag">VIP</label>
@@ -173,18 +166,18 @@
 				</div>
 			</div>
 
-			<button class="m-button" @click="showPlayListFlag = false" style="position:fixed; bottom:15px; right:20px;">关闭</button>
+			<button class="m-button closeBtn" @click="showPlayListFlag=false">关闭</button>
 		</div>
 
 		<!-- 歌词 -->
-		<div class="m-modal-fullscreen" v-if="showLyricFlag" style="overflow:hidden auto;">
+		<div class="lyricView m-modal-fullscreen" v-if="showLyricFlag">
 			<div class="m-modal-content">
 				<h1 class="m-modal-title">{{ currentPlayInfo.name }}</h1>
-				<p class="m-modal-subtitle" title="点此复制LRC" @click="copyLyric()">歌曲歌词</p>
+				<p class="m-modal-subtitle" title="复制LRC" @click="copyLyric()">歌曲歌词</p>
 				<p class="m-modal-text" v-html="currentLyric"></p>
 			</div>
 
-			<button class="m-button" @click="showLyricFlag = false" style="position:fixed; bottom:15px; right:20px;">关闭</button>
+			<button class="m-button closeBtn" @click="showLyricFlag=false">关闭</button>
 		</div>
 	</div>
 
