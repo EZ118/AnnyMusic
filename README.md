@@ -1,11 +1,10 @@
-<center>
-
 ![图标](https://youke1.picui.cn/s1/2025/08/13/689c322f2996c.png)
 # AnnyMusic
-支持洛雪音乐源的音乐播放浏览器扩展
-
-</center>
-
+支持洛雪音乐源的音乐播放浏览器扩展   
+![License](https://img.shields.io/badge/license-GPLv3-yellow)
+![GitHub repo size](https://img.shields.io/github/repo-size/EZ118/AnnyMusic)
+![GitHub Repo stars](https://img.shields.io/github/stars/EZ118/AnnyMusic)
+![GitHub all releases](https://img.shields.io/github/downloads/EZ118/AnnyMusic/total)
 
 ## 简介
 该项目是一款浏览器扩展，支持洛雪音乐源，并提供简洁高效的使用体验。   
@@ -30,11 +29,12 @@
 项目使用`sval.js`实现在`CSP`下能动态执行音乐源JS脚本，目前有`XSS`漏洞。
 
 ## 参考与引用
-+ [zepto.js](https://zeptojs.com/)
-+ [sval](https://github.com/Siubaak/sval)
-+ [petite-vue-csp](https://github.com/baptistejamin/petite-vue-csp)
-+ [listen1_chrome_extension](https://github.com/listen1/listen1_chrome_extension)
-+ [lx-music-desktop](https://github.com/lyswhut/lx-music-desktop/)
++ [madrobby/zepto](https://github.com/madrobby/zepto)
++ [Siubaak/sval](https://github.com/Siubaak/sval)
++ [baptistejamin/petite-vue-csp](https://github.com/baptistejamin/petite-vue-csp)
++ [listen1/listen1_chrome_extension](https://github.com/listen1/listen1_chrome_extension)
++ [lyswhut/lx-music-desktop](https://github.com/lyswhut/lx-music-desktop/)
++ [bingaha/kugou-lrc](https://github.com/bingaha/kugou-lrc)
 
 ## 声明与须知
 + 当前项目能对洛雪音乐源部分兼容

@@ -1,15 +1,18 @@
 $(document).ready(() => {
-    $.get("./ikun_music_source.js", (sourceScript) => {
+    const externalMusicSource = JSON.parse(localStorage.getItem("externalMusicSource"));
+    $.each(externalMusicSource, (index, item) => {
         const interpreter = new Sval({
             ecmaVer: 'latest',
             sourceType: 'script',
             sandBox: true,
-        })
+        });
         
-        interpreter.import({ lx: LxApi });
-
-        interpreter.run(sourceScript)
-    });
+        var thisLxApi = LxApi; // 此处LxApi会因thisLxApi而改变，可能导致后一个脚本信息与前一个相结合
+        thisLxApi.currentScriptInfo = item;
+        
+        interpreter.import({ lx: thisLxApi });
+        interpreter.run(item.rawScript);
+    })
 });
 
 document.addEventListener('touchstart', function (event) {
@@ -32,14 +35,14 @@ const uni = {
 	},
 	showModal: function (options) {
 		if (options.confirmText) {
-			var tt = confirm(options.title + "\n" + options.content);
+			var tt = confirm(`【${options.title}】\n${options.content}`);
 			if (tt) {
 				options.success({ "cancel": false, "confirm": true });
 			} else {
 				options.success({ "cancel": true, "confirm": false });
 			}
 		} else {
-			alert(options.title + "\n" + options.content);
+            alert(`【${options.title}】\n${options.content}`);
 		}
 		console.log(options);
 	},
@@ -138,15 +141,6 @@ PetiteVue.createApp({
     },
 
     /* 播放器 */
-    jsonContains(jsonArray, jsonObject) {
-        for (var i = 0; i < jsonArray.length; i++) {
-            var element = jsonArray[i];
-            if (element.id === jsonObject.id) {
-                return true;
-            }
-        }
-        return false;
-    },
     playMusic(item, from) {
         this.isLoading = true;
 
@@ -162,7 +156,7 @@ PetiteVue.createApp({
             this.playList = JSON.parse(JSON.stringify(this.collectionList));
             this.isLoading = false;
             return;
-        } else if (from == "playlist" || this.jsonContains(this.playList, this.currentPlayInfo)) {
+        } else if (from == "playlist" || jsonContains(this.playList, this.currentPlayInfo)) {
             // 如果当前播放列表中已存在该歌曲，则不重复添加
             console.log("当前播放列表中已存在该歌曲，跳过添加");
             this.isLoading = false;
@@ -240,28 +234,18 @@ PetiteVue.createApp({
 
         if (this.currentPlayInfo.id == "default") { return; }
 
-        let origStorage = uni.getStorageSync(storageName);
-
-        if (!origStorage || origStorage === "") {
-            origStorage = [];
-        } else {
-            origStorage = JSON.parse(origStorage);
-        }
-
         // 深拷贝当前播放信息，避免引用污染
         const songToSave = JSON.parse(JSON.stringify(this.currentPlayInfo));
 
-        if (this.jsonContains(origStorage, songToSave)) {
+        if (jsonContains(this.collectionList, songToSave)) {
             uni.showToast({ title: "您已收藏。" });
             return;
         }
 
-        origStorage.push(songToSave);
-        uni.setStorageSync(storageName, JSON.stringify(origStorage));
+        this.collectionList.push(songToSave);
+        uni.setStorageSync(storageName, JSON.stringify(this.collectionList));
 
         uni.showToast({ title: "收藏成功！" });
-
-        this.getCollectionList();
     },
     
     handleMusicError() {
@@ -303,7 +287,6 @@ PetiteVue.createApp({
                 uni.setStorageSync(storageName, JSON.stringify(this.collectionList));
 
                 uni.showToast({ title: "已删除" });
-                this.getCollectionList();
             }
         });
     },
@@ -331,6 +314,101 @@ PetiteVue.createApp({
             }, 500);
         })();
     },
+    
+    /* 设置项 */
+    getSourceList() {
+        const storageName = "externalMusicSource";
+        var res = uni.getStorageSync(storageName);
+        
+        if (!res || res == "") {
+            this.sourceList = [];
+            uni.setStorageSync(storageName, "[]");
+        } else {
+            this.sourceList = JSON.parse(res);
+        }
+    },
+    importSource(remote) {
+        const storageName = "externalMusicSource";
+        
+        if(remote) {
+            const url = prompt("【导入音乐源】请输入链接");
+            if(!url) { return; }
+            $.get(url, (res) => {
+                if(!res) { alert("脚本不存在！"); return; }
+                
+                let metadata = parseMetadata(res);
+                if(!metadata.name) { alert("脚本元数据错误"); return; }
+                
+                uni.showModal({
+                    title: "添加脚本",
+                    editable: false,
+                    content: `是否添加该脚本？ \n\n- 名称: ${metadata.name} \n- 作者: ${metadata.author}\n- 简介: ${metadata.description}`,
+                    cancelText: "取消",
+                    confirmText: "确定",
+                    success: (res2) => {
+                        if (res2.cancel) { return; }
+                        
+                        metadata["rawScript"] = res;
+                        this.sourceList.push(metadata);
+                        uni.setStorageSync(storageName, JSON.stringify(this.sourceList));
+                        uni.showToast({
+                            title: "已添加，下次加载时生效"
+                        });
+                    }
+                });
+            });
+        } else {
+            pickFile(".js,.ts", (file) => {
+                const reader = new FileReader();
+                reader.readAsText(file, "text");
+                reader.onload = (e) => {
+                    const res = e.target.result;
+                    if(!res) { alert("脚本不存在！"); return; }
+                    
+                    let metadata = parseMetadata(res);
+                    if(!metadata.name) { alert("脚本元数据错误"); return; }
+                    
+                    uni.showModal({
+                        title: "添加脚本",
+                        editable: false,
+                        content: `是否添加该脚本？ \n\n- 名称: ${metadata.name} \n- 作者: ${metadata.author}\n- 简介: ${metadata.description}`,
+                        cancelText: "取消",
+                        confirmText: "确定",
+                        success: (res2) => {
+                            if (res2.cancel) { return; }
+                            
+                            metadata["rawScript"] = res;
+                            this.sourceList.push(metadata);
+                            uni.setStorageSync(storageName, JSON.stringify(this.sourceList));
+                            uni.showToast({
+                                title: "已添加，下次加载时生效"
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    },
+    
+    delSourceListItem(idx) {
+        const storageName = "externalMusicSource";
+        
+        uni.showModal({
+            title: "移除音源",
+            editable: false,
+            content: "确定要删除该音源吗？" + this.sourceList[idx].name,
+            cancelText: "取消",
+            confirmText: "确定",
+            success: (res) => {
+                if (res.cancel) { return; }
+                this.sourceList.splice(idx, 1);
+                uni.setStorageSync(storageName, JSON.stringify(this.sourceList));
+
+                uni.showToast({ title: "已删除" });
+            }
+        });
+    },
+    
     importCollection() {
         uni.getClipboardData({
             success: (res) => {
@@ -374,9 +452,10 @@ PetiteVue.createApp({
         });
     },
 
-    /* 初始 */
+    /* 初始化 */
     mounted() {
         this.getCollectionList();
+        this.getSourceList();
 
         // 隐藏加载球
         $('#loaderCover').hide();
