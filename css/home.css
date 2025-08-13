@@ -10,7 +10,7 @@ body {
 
 
 #app {
-    flex-wrap:nowrap;
+    flex-wrap: nowrap;
 }
 
 #loaderCover {
@@ -24,12 +24,12 @@ body {
 }
 
 .loaderBall {
-    position:fixed;
-    z-index:1003;
-    top:calc(50% - 15px);
-    left:calc(50% - 15px);
-    width:30px;
-    height:30px;
+    position: fixed;
+    z-index: 1003;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 30px;
 }
 
 .m-page-container {
@@ -61,34 +61,34 @@ body {
 /* =========== */
 
 .searchView .topLogo {
-    display:block;
-    width:150px;
-    margin:15px 0 0 25px;
+    display: block;
+    width: 150px;
+    margin: 15px 0 0 25px;
 }
 
 .searchView .searchBar {
-    position:relative;
-    top:0px;
-    left:15px;
-    width:60vw;
+    position: relative;
+    top: 0px;
+    left: 15px;
+    width: 60vw;
 }
 
 .searchView .searchSourceTab {
-    position:relative;
-    top:4px;
-    left:24px;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    gap:8px;
+    position: relative;
+    top: 4px;
+    left: 24px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .searchView .searchResults {
-    position:relative;
-    top:10px;
-    left:24px;
-    width:calc(60vw + 15px);
-    max-height:calc(100vh - 175px);
+    position: relative;
+    top: 10px;
+    left: 24px;
+    width: calc(60vw + 15px);
+    max-height: calc(100vh - 175px);
 }
 
 /* ======== */
@@ -134,19 +134,19 @@ body {
 }
 
 .playerView .ctrlButtons {
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    gap:8px;
-    margin:8px;
-    width:150px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px;
+    width: 150px;
 }
 
 .playerView .audioBar {
-    position:fixed;
-    bottom:0;
-    left:80px;
-    width:calc(100vw - 80px);
+    position: fixed;
+    bottom: 0;
+    left: 80px;
+    width: calc(100vw - 80px);
 }
 
 .playerView .audio {
@@ -159,18 +159,18 @@ body {
 
 /* =========== */
 .collectionView .collectionList {
-    margin:10px;
-    width:calc(100vw - 100px);
-    max-height:calc(100vh - 140px);
+    margin: 10px;
+    width: calc(100vw - 100px);
+    max-height: calc(100vh - 140px);
 }
 
 .collectionView .ctrlButtons {
-    margin:10px;
-    display:flex;
-    flex-direction:row;
-    flex-wrap:wrap;
-    gap:8px;
-    width:220px;
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 220px;
 }
 
 .collectionView .sourceUpdateMsg {
@@ -199,9 +199,9 @@ body {
 }
 
 .collectionView .sourceUpdateMsg .right {
-    display:flex;
-    flex-direction:column;
-    align-items:center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .collectionView .sourceUpdateMsg .right .title {
@@ -214,26 +214,50 @@ body {
     color: inherit;
 }
 
+/* ============ */
+.settingsView {
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden auto;
+}
+
+.settingsView .section {
+    width: 100%;
+    height: fit-content;
+    border: none;
+    border-bottom: 1px solid #55555555;
+    padding: 8px 0px;
+}
+
+.settingsView h1,
+.settingsView h2,
+.settingsView h3 {
+    margin: 5px 0px 8px 0px;
+    padding: 0px 0px;
+}
+
+
 
 /* ============ */
 .playlistView .playList {
-    max-height:calc(100vh - 200px);
-    overflow:auto;
+    max-height: calc(100vh - 200px);
+    overflow: auto;
 }
 
 .playlistView .closeBtn {
-    position:fixed;
-    bottom:15px;
-    right:20px;
+    position: fixed;
+    bottom: 15px;
+    right: 20px;
 }
 
 /* ============ */
 .lyricView {
-    overflow:hidden auto;
+    overflow: hidden auto;
 }
 
 .lyricView .closeBtn {
-    position:fixed;
-    bottom:15px;
-    right:20px;
+    position: fixed;
+    bottom: 15px;
+    right: 20px;
 }
