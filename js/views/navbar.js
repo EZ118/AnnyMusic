@@ -27,6 +27,7 @@ class NavView {
                     {
                         href: item.route,
                         title: item.name,
+                        options: {replace: true},
                         onclick: () => {
                             // 设置当前选中项
                             this.selected = item.route

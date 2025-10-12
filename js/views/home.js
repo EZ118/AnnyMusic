@@ -40,8 +40,8 @@ class HomeView {
                 m("h1", "Home"),
                 m("p", this.currentQuote)
             ]),
-            m(".row", [
-                m(".section", [
+            m(".home-row", [
+                m(".home-section", [
                     m("h2", "Recently Played"),
                     this.recentlyPlayed.map((item) => {
                         return m("div", { class: "music-card" }, [
@@ -53,7 +53,7 @@ class HomeView {
                         ])
                     })
                 ]),
-                m(".section", { style: {"grid-template-columns": "repeat(1, 1fr)" } }, [
+                m(".home-section", { style: {"grid-template-columns": "repeat(1, 1fr)" } }, [
                     m("h2", "Recent Playlist"),
                     this.recentPlaylist.map((item) => {
                         return m("div", { class: "music-card" }, [

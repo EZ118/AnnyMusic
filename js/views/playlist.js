@@ -1,18 +1,18 @@
 class PlaylistView {
     constructor() {
         this.playlist = [];
-        this.currentIndex = 0;
-        this.isPlaying = false;
-        this.audio = new Audio();
-        this.audio.addEventListener('ended', () => {
-            this.next();
-        });
     }
 
     view(vnode) {
-        return m("div", [
-            m("h1", "Playlist")
-        ])
+        return [
+            m(".banner", [
+                m("h1", "Playlists"),
+                m("p", "A small home for wandering thoughts.")
+            ]),
+            m(".row", [
+            ])
+
+        ]
     }
 }
 

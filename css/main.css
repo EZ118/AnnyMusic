@@ -12,6 +12,11 @@ body {
     box-sizing: border-box;
 }
 
+::selection {
+    color: #fff;
+    background: var(--s-color-primary);
+}
+
 body {
     display: flex;
     flex-direction: row;
@@ -34,6 +39,7 @@ nav {
     justify-content: flex-start;
     align-items: flex-start;
     background: var(--s-color-surface-container-low);
+    z-index:2;
 }
 
 nav:hover {
@@ -91,6 +97,7 @@ nav .item.selected svg {
 /* 主页容器 */
 main {
     flex: 1;
+    z-index: 1;
     width: calc(100vw - 50px);
     height: calc(100vh - 80px);
     overflow: hidden auto;
