@@ -6,7 +6,7 @@ class HomeView {
     oninit() {
         this.currentQuote = this.getRandomQuote();
         this.recentlyPlayed = getStorageSync("recentlyPlayed") || [{}, {}, {}, {}, {}, {}];
-        this.recentPlaylist = getStorageSync("recentPlaylist") || [{}, {}, {}, {}, {}, {}];
+        this.recentPlaylist = getStorageSync("recentPlaylist") || [{}, {}, {}, {}];
     }
 
     getRandomQuote() {
@@ -53,7 +53,7 @@ class HomeView {
                         ])
                     })
                 ]),
-                m(".section", [
+                m(".section", { style: {"grid-template-columns": "repeat(1, 1fr)" } }, [
                     m("h2", "Recent Playlist"),
                     this.recentPlaylist.map((item) => {
                         return m("div", { class: "music-card" }, [

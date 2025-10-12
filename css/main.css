@@ -20,7 +20,7 @@ body {
     background-color: var(--s-color-surface-container-low);
     color: var(--s-color-on-background);
     user-select: none;
-    overflow: hidden auto;
+    overflow: hidden;
 }
 
 /* 导航栏 */
@@ -92,8 +92,8 @@ nav .item.selected svg {
 main {
     flex: 1;
     width: calc(100vw - 50px);
-    min-height: calc(100vh - 80px);
-    height: fit-content;
+    height: calc(100vh - 80px);
+    overflow: hidden auto;
 }
 
 /* 底部播放器 */
