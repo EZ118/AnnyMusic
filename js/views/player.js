@@ -3,7 +3,7 @@ const PlayerView = {
     oninit() {
         PlayerView.duration = 100;
         PlayerView.currentTime = 0;
-        PlayerView.cover = "https://picsum.photos/200/300?random=1";
+        PlayerView.cover = "https://picsum.photos/64/64?random=1";
     },
 
 
@@ -18,7 +18,7 @@ const PlayerView = {
         const clickX = e.clientX - rect.left; // 点击位置相对于元素左边界的距离
         const percentX = (clickX / rect.width); // 转换为百分比
         PlayerView.currentTime = percentX * PlayerView.duration; // 调整进度
-        console.log(percentX, PlayerView.duration);
+        // console.log(percentX, PlayerView.duration);
         m.redraw();
     },
     view(vnode) {
@@ -28,7 +28,7 @@ const PlayerView = {
             ),
 
             m('.controls',
-                m('img', { src: PlayerView.cover, alt: "专辑", class: "left" }),
+                m('img', { src: PlayerView.cover, alt: "ALBUM", class: "left" }),
                 m('.right', [
                     m(".controlBtn", { onclick: () => {PlayerView.play()} }, m.trust( ICON.prevSong )),
                     m(".controlBtn", { onclick: () => {PlayerView.play()} }, m.trust( ICON.play )),

@@ -19,6 +19,8 @@ body {
     align-items: flex-start;
     background-color: var(--s-color-surface-container-low);
     color: var(--s-color-on-background);
+    user-select: none;
+    overflow: hidden auto;
 }
 
 /* 导航栏 */
@@ -90,6 +92,7 @@ nav .item.selected svg {
 main {
     flex: 1;
     width: calc(100vw - 50px);
+    min-height: calc(100vh - 80px);
     height: fit-content;
 }
 
@@ -119,6 +122,8 @@ footer .progressbar {
     height: 5px;
     background-color: var(--s-color-on-primary);
     border-radius: 5px;
+    transform: scale(1, 0.9);
+    cursor: pointer;
 }
 
 footer .progressbar-track {
@@ -128,6 +133,10 @@ footer .progressbar-track {
     background-color: var(--s-color-primary);
     transition: all 0.1s;
     border-radius: 5px;
+}
+
+footer .progressbar:hover {
+    transform: scale(1, 1.5);
 }
 
 footer .controls {
