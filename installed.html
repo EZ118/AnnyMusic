@@ -1,31 +1,197 @@
 <!DOCTYPE html>
-<html lang="zh" class="mdui-theme-auto">
+<html lang="zh">
+
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="referrer" content="no-referrer" />
-	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
-    
-	<title>欢迎使用 AnnyMusic</title>
-    
-	<link rel="icon" type="image/png" href="./img/icon_64x64.png">
-	<link rel="stylesheet" type="text/css" href="./css/material-theme.css">
-	<link rel="stylesheet" type="text/css" href="./css/material.css">
-    
-	<script src="./js/vendor/zepto.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>欢迎使用 AnnyMusic</title>
+
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="./img/icon_64x64.png">
+
+    <!-- 引入本地 animate.css -->
+    <link rel="stylesheet" type="text/css" href="./css/animate.min.css">
+
+    <!-- 自定义样式 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-weight: normal;
+        }
+
+        body,
+        html {
+            height: 100vh;
+            width: 100vw;
+            font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+            -webkit-appearance: none !important;
+            -webkit-tap-highlight-color: transparent;
+            color: #222;
+            overflow: hidden;
+        }
+
+        /* 背景：多色混合渐变 + 动态流动效果 */
+        .bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg,
+                    #006d43e9 0%,
+                    #6ddba1 50%,
+                    #8af8bb 75%,
+                    #96ceb4 100%);
+            background-size: 200% 200%;
+            animation: gradientShift 18s ease infinite;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 内容容器：居中布局 */
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 2rem;
+            z-index: 10;
+            position: relative;
+        }
+
+        /* 图标：带阴影与圆角 */
+        .icon {
+            width: 96px;
+            height: 96px;
+            margin-bottom: 1.5rem;
+            border-radius: 1.5em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+            animation: bounceInUp 1.2s ease-out;
+        }
+
+        /* 标题文字 */
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #213529;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeInDown 1.2s ease-out forwards 0.3s;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #043541;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: fadeInDown 1.2s ease-out forwards 0.6s;
+        }
+
+        h4 {
+            font-size: 1.1rem;
+            color: #005232;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInDown 1.2s ease-out forwards 0.9s;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            background: #003921;
+            color: white;
+            font-size: 1.1rem;
+            text-decoration: none;
+            border-radius: 30px;
+            box-shadow: 0 6px 15px rgba(108, 92, 231, 0.3);
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            opacity: 1;
+            transform: translateY(20px);
+            animation: slideInUp 1.2s ease-out forwards 1.2s;
+        }
+
+        .btn:hover {
+            background: #005232;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::after {
+            content: '';
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover::after {
+            transform: translateX(5px);
+        }
+
+        /* 响应式适配 */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+
+            h4 {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 10px 24px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
+
 <body>
-    <center>
-        <br><br>
-        <img src="./img/icon_128x128.png" width="96px" height="96px">
-        <h1>AnnyMusic 安装成功</h1>
-        <h3>您还需要进行最后的操作</h3>
-        <h3>该扩展需要您授予文件访问权限以获取本地音乐</h3>
-        <hr>
-        <h2>我该怎么做？</h2>
-        <h4>Firefox</h4>
-        进入扩展，找到扩展，允许扩展访问file://
-        <h4>Chrome/Edge</h4>
-        进入扩展，找到扩展，允许扩展访问file://
-    </center>
+    <!-- 背景层 -->
+    <div class="bg"></div>
+
+    <!-- 主内容容器 -->
+    <div class="container">
+        <img src="./img/icon_128x128.png" alt="AnnyMusic Logo" class="icon animate__animated animate__bounceInUp">
+
+        <h1 class="animate__animated animate__fadeInDown">AnnyMusic 安装成功</h1>
+        <h3 class="animate__animated animate__fadeInDown">您还需要进行最后的操作</h3>
+        <h4 class="animate__animated animate__fadeInDown">
+            请导入自定义音乐源（兼容 LX_Music）、搜索和歌词源
+        </h4>
+
+        <a href="./home.html#!/settings/source" class="btn animate__animated animate__slideInUp">
+            开始
+        </a>
+    </div>
 </body>
+
 </html>

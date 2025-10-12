@@ -7,12 +7,14 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/EZ118/AnnyMusic/total)
 
 ## 简介
-该项目是一款浏览器扩展，支持洛雪音乐源，并提供简洁高效的使用体验。   
-洛雪官方桌面端软件是基于Electron开发的，其功能丰富，但资源占用较大。
-该项目旨在以更轻量的方式实现类洛雪的音乐播放器。
-与此同时，项目结构简单，使用轻量的响应式框架，方便定制。
+该项目是一款浏览器扩展，兼容可用于洛雪音乐的JS音乐源，并提供简洁高效的使用体验。   
+洛雪音乐桌面端软件是基于Electron开发的，其功能丰富，但资源占用较大。
+该项目结构简单，使用轻量的响应式框架，方便定制。
 
 ## 功能与详情
+### 首页
+聚合显示用户的音乐收藏列表、历史、收听次数和时长排行、收听时段等数据。   
+用户可快速通过首页开始播放喜欢的音乐。   
 ### 播放器
 播放器包含音乐播放、专辑封面、播放列表、歌词浏览、收藏功能。   
 底部音乐播放栏使用浏览器自带控件。   
@@ -26,14 +28,16 @@
 （注：目前只有一个默认收藏夹；音频不会缓存在本地，需要“更新音乐源”刷新）
 ### 音乐源
 使用前务必在“设置页”导入至少一个可用的音乐源，否则无法使用。   
-项目使用`sval.js`实现在`CSP`下能动态执行音乐源JS脚本，目前有`XSS`漏洞。
+项目使用`sval.js`实现在`CSP`下能动态执行音乐源JS脚本，可能会受到恶意脚本的攻击。
 
 ## 参考与引用
-+ [madrobby/zepto](https://github.com/madrobby/zepto)
 + [Siubaak/sval](https://github.com/Siubaak/sval)
-+ [baptistejamin/petite-vue-csp](https://github.com/baptistejamin/petite-vue-csp)
++ [MithrilJS/mithril.js](https://github.com/MithrilJS/mithril.js)
++ [nodeca/pako](https://github.com/nodeca/pako)
++ [brix/crypto-js](https://github.com/brix/crypto-js)
++ [travist/jsencrypt](https://github.com/travist/jsencrypt)
 + [listen1/listen1_chrome_extension](https://github.com/listen1/listen1_chrome_extension)
-+ [lyswhut/lx-music-desktop](https://github.com/lyswhut/lx-music-desktop/)
++ [lyswhut/lx-music-desktop](https://github.com/lyswhut/lx-music-desktop)
 + [bingaha/kugou-lrc](https://github.com/bingaha/kugou-lrc)
 
 ## 声明与须知

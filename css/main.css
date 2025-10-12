@@ -1,0 +1,188 @@
+﻿html,
+body {
+    padding: 0;
+    margin: 0;
+    -webkit-appearance: none !important;
+    overscroll-behavior: none;
+    touch-action: pan-x pan-y;
+    font-family: "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: var(--s-color-surface-container-low);
+    color: var(--s-color-on-background);
+}
+
+/* 导航栏 */
+nav {
+    height: 100vh;
+    width: 50px;
+    border-right: 1px solid var(--s-color-surface-container);
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    background: var(--s-color-surface-container-low);
+}
+
+nav:hover {
+    box-shadow: 1px 0px 10px #00000055;
+}
+
+nav .logo {
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+nav .item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    margin: 3px 5px;
+    border-radius: 10px;
+    background-color: transparent;
+    transition: all 0.2s;
+}
+
+nav .item svg {
+    width: 24px;
+    height: 24px;
+    margin: 8px;
+
+    stroke: var(--s-color-on-surface-variant);
+    fill: var(--s-color-on-surface-variant);
+    color: var(--s-color-on-surface-variant);
+}
+
+nav .item:hover {
+    background-color: rgba(127, 127, 127, 0.1);
+}
+
+nav .item:active {
+    background-color: rgba(127, 127, 127, 0.2);
+}
+
+nav .item.selected {
+    background-color: var(--s-color-on-primary);
+}
+
+nav .item.selected svg {
+    stroke: var(--s-color-primary);
+    fill: var(--s-color-primary);
+    color: var(--s-color-primary);
+}
+
+/* 主页容器 */
+main {
+    flex: 1;
+    width: calc(100vw - 50px);
+    height: fit-content;
+}
+
+/* 底部播放器 */
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 50px;
+    right: 0;
+    z-index: 999;
+    transition: all 0.2s;
+    width: calc(100vw - 50px);
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-top: 1px solid #55555555;
+    /* var(--s-color-surface-container); */
+    background-color: var(--s-color-surface-container-low);
+    color: var(--s-color-on-background);
+}
+
+footer .progressbar {
+    width: 100%;
+    margin: 0;
+    height: 5px;
+    background-color: var(--s-color-on-primary);
+    border-radius: 5px;
+}
+
+footer .progressbar-track {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background-color: var(--s-color-primary);
+    transition: all 0.1s;
+    border-radius: 5px;
+}
+
+footer .controls {
+    height: 75px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+footer .controls .left {
+    width: 55px;
+    height: 55px;
+    margin: 10px;
+    border-radius: 12px;
+    cursor:pointer;
+}
+
+footer .controls .right {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    gap: 8px;
+}
+
+footer .controls .controlBtn {
+    width: 45px;
+    height: 45px;
+    display:inline-flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer;
+    background-color: var(--s-color-on-primary);
+    margin: 10px;
+    border-radius: 50%;
+    transition: all 0.2s;
+    box-shadow: 0px 2px 5px #00000022;
+}
+
+footer .controls .controlBtn svg {
+    fill: var(--s-color-primary);
+    stroke: var(--s-color-primary);
+    color: var(--s-color-primary);
+    width: 30px;
+    height: 30px;
+}
+
+footer .controls .controlBtn:hover {
+    filter: brightness(0.95);
+}
+
+footer .controls .controlBtn:active {
+    filter: brightness(0.8);
+}
