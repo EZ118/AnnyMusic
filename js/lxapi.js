@@ -288,11 +288,13 @@ const LxApi = {
     },
 
     on: (eventName, handler) => {
+        // 注册事件
         if (!eventHandlers[eventName]) eventHandlers[eventName] = [];
         eventHandlers[eventName].push(handler);
     },
 
     emit: async (eventName, payload) => {
+        // 执行音源内部函数
         if (!eventHandlers[eventName]) return undefined;
 
         let result;
@@ -303,7 +305,13 @@ const LxApi = {
     },
 
     send: (eventName, datas) => {
+        // 初始化时执行
         console.log('[LxApi.send]', eventName, datas);
+
+        // 如果有消息提示
+        if(eventName == LxApi.EVENT_NAMES.updateAlert) {
+            alert(JSON.stringify(datas));
+        }
     },
 
     request: (url, options, callback) => {

@@ -1,9 +1,5 @@
 class SearchView {
-    constructor() {
-        this.keyword = "";
-        this.platform = "netease";
-        this.searchResults = [];
-    }
+    constructor() {}
     oninit() {
         this.keyword = "";
         this.platform = "netease";
@@ -69,19 +65,19 @@ class SearchView {
                                     m("button", {
                                         title: "Play now",
                                         onclick: () => {
-                                            doPlayMusic(result);
+                                            this.doPlayMusic(result);
                                         }
                                     }, " ▸ "),
                                     m("button", {
                                         title: "Add to favorites",
                                         onclick: () => {
-                                            doPlayMusic(result);
+                                            this.doPlayMusic(result);
                                         }
                                     }, " ☆ "),
                                     m("button", {
                                         title: "Add to current playlist",
                                         onclick: () => {
-                                            doPlayMusic(result);
+                                            this.doPlayMusic(result);
                                         }
                                     }, " + ")
                                 )

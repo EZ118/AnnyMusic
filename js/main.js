@@ -1,5 +1,4 @@
 import NavView from "./views/navbar.js";
-import PlayerView from "./views/player.js";
 import HomeView from "./views/home.js";
 import PlaylistView from "./views/playlist.js";
 import SearchView from "./views/search.js";

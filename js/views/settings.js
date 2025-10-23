@@ -54,19 +54,26 @@ class SettingsView {
                             m("h3", "基本设置"),
                             m("label", [
                                 m("input[type=checkbox]"),
-                                "以全屏模式启动"
+                                "启动时以全屏显示窗口"
                             ]),
+                            m("label", [
+                                m("input[type=checkbox]"),
+                                "始终启用黑暗主题"
+                            ]),
+
                             m("label", "自定义源"),
-                            m("select[name=choice]",
-                                [{ value: "hash", selected: true, text: "洛雪音源" }, { value: "hash2", selected: true, text: "ikun音源" }].map((item) => {
-                                    return m("option[value='" + item.value + "']", item.text)
-                                })
-                            ),
+                            "当前音源: ",
                             m("button", {
                                 onclick: () => {
                                     this.importMusicSource()
                                 }
-                            }, "导入音源"),
+                            }, "导入新音源"),
+
+                            m("label", "语言"),
+                            m("select", [
+                                m("option[value='zh']", "简体中文"),
+                                m("option[value='en']", "English")
+                            ]),
                         ]
                     },
                     {

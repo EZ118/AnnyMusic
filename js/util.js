@@ -100,7 +100,7 @@ function formatDuration(seconds) {
     // 秒数转时间
     let hours = parseInt(seconds / 3600);
     let minutes = parseInt((seconds % 3600) / 60);
-    let secondsLeft = seconds % 60;
+    let secondsLeft = Math.floor(seconds % 60);
 
     // 补零操作
     hours = hours < 10 ? "0" + hours : hours;

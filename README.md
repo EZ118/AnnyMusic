@@ -22,13 +22,13 @@
 ### 搜索页
 搜索栏搜索歌曲，下方提供按钮切换搜索平台（搜索功能内置，不能获取音乐音频）。   
 标注VIP的列表项表明在该音乐平台是付费歌曲，是否能继续收听取决于用户的自定义音乐源。   
-### 收藏页
+### 播放列表页
 列表展示收藏音乐；点击列表项目，可收听音乐；右键/长按列表项目，可选择删除条目。   
 每次收听之前建议“更新音乐源”，用于通过音乐源重新获取最新可收听的音频链接。   
 （注：目前只有一个默认收藏夹；音频不会缓存在本地，需要“更新音乐源”刷新）
 ### 音乐源
 使用前务必在“设置页”导入至少一个可用的音乐源，否则无法使用。   
-项目使用`sval.js`实现在`CSP`下能动态执行音乐源JS脚本，可能会受到恶意脚本的攻击。
+项目使用`sval.js`实现在`CSP`下能动态执行音乐源JS脚本，可能会受到恶意脚本的攻击，导入前需要确保音源来源可靠。
 
 ## 参考与引用
 + [Siubaak/sval](https://github.com/Siubaak/sval)
@@ -37,7 +37,7 @@
 + [brix/crypto-js](https://github.com/brix/crypto-js)
 + [travist/jsencrypt](https://github.com/travist/jsencrypt)
 + [listen1/listen1_chrome_extension](https://github.com/listen1/listen1_chrome_extension)
-+ [lyswhut/lx-music-desktop](https://github.com/lyswhut/lx-music-desktop)
++ [lyswhut/lx-music-mobile](https://github.com/lyswhut/lx-music-mobile)
 + [bingaha/kugou-lrc](https://github.com/bingaha/kugou-lrc)
 
 ## 声明与须知

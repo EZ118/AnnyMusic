@@ -224,7 +224,7 @@
 }
 
 .settings-view .tabs .tab-headers {
-    width: 150px;
+    width: clamp(125px, 25%, 175px);
     height: 100%;
     display: block;
     background: inherit;
