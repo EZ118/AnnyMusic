@@ -169,7 +169,7 @@ const utils = {
          * @returns {Uint8Array} 字节数组
          */
         from(input, encoding) {
-            
+
             console.log('[LxApi.buffer.from]', input, encoding);
 
             if (typeof input === 'string') {
@@ -297,11 +297,21 @@ const LxApi = {
         // 执行音源内部函数
         if (!eventHandlers[eventName]) return undefined;
 
-        let result;
+        // let result;
+        // for (const handler of eventHandlers[eventName]) {
+        //     result = await Promise.resolve(handler(payload));
+        // }
+        // return result;
+
         for (const handler of eventHandlers[eventName]) {
-            result = await Promise.resolve(handler(payload));
+            try {
+                // 尝试执行每个处理函数，只要有一个成功就立即返回结果
+                return await Promise.resolve(handler(payload));
+            } catch (err) {
+                // 保存第一个错误，如果所有都失败则最终抛出这个错误
+                return Promise.reject(err);
+            }
         }
-        return result;
     },
 
     send: (eventName, datas) => {
@@ -309,7 +319,7 @@ const LxApi = {
         console.log('[LxApi.send]', eventName, datas);
 
         // 如果有消息提示
-        if(eventName == LxApi.EVENT_NAMES.updateAlert) {
+        if (eventName == LxApi.EVENT_NAMES.updateAlert) {
             alert(JSON.stringify(datas));
         }
     },
@@ -343,19 +353,16 @@ const LxApi = {
             }
         }
 
-        // 处理 body 数据（JSON）
-        if (options.body) {
-            if (typeof options.body === 'object') {
-                fetchOptions.body = JSON.stringify(options.body);
+        if (options.formData) {
+            if (typeof options.formData === 'object') {
+                fetchOptions.body = JSON.stringify(options.formData);
                 if (!fetchOptions.headers['Content-Type'] && !fetchOptions.headers['content-type']) {
                     fetchOptions.headers['Content-Type'] = 'application/json';
                 }
             } else {
-                fetchOptions.body = options.body;
+                fetchOptions.body = options.formData;
             }
         }
-
-        //alert(url + ' ' + JSON.stringify(fetchOptions));
 
         fetch(url, fetchOptions)
             .then(async resp => {

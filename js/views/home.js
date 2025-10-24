@@ -45,7 +45,7 @@ class HomeView {
                     m("h2", "Recently Played"),
                     this.recentlyPlayed.map((item) => {
                         return m("div", { class: "music-card" }, [
-                            m("img", { class: "cover", src: "https://picsum.photos/64/64?random=1" }),
+                            m("img", { class: "cover", src: "./img/default_cover.svg" }),
                             m("div", { class: "info" }, [
                                 m("h3", { class: "title" }, "Song Title"),
                                 m("p", { class: "artist" }, "Artist Name")
@@ -57,7 +57,7 @@ class HomeView {
                     m("h2", "Recent Playlist"),
                     this.recentPlaylist.map((item) => {
                         return m("div", { class: "music-card" }, [
-                            m("img", { class: "cover", src: "https://picsum.photos/64/64?random=1" }),
+                            m("img", { class: "cover", src: "./img/default_cover.svg" }),
                             m("div", { class: "info" }, [
                                 m("h3", { class: "title" }, "Song Title"),
                                 m("p", { class: "artist" }, "Artist Name")

@@ -2,9 +2,10 @@ const defaultQuality = "128k";
 
 const PlayerView = {
     oninit() {
+        PlayerView.currentInfo = {};
         PlayerView.duration = 0.01; // 音频总时长
         PlayerView.currentTime = 0; // 当前播放进度
-        PlayerView.cover = "https://picsum.photos/64/64?random=1"; // 歌曲封面
+        PlayerView.cover = "./img/default_cover.svg"; // 歌曲封面
         PlayerView.audio = new Audio(); // 音频播放对象
 
         PlayerView.startProgressTracking(); // 自动更新播放进度
@@ -25,6 +26,7 @@ const PlayerView = {
 
             // 加载
             PlayerView.audio.src = newKey.mp3;
+            PlayerView.cover = newKey.cover;
             PlayerView.audio.load();
 
             // 播放
@@ -77,7 +79,7 @@ const PlayerView = {
             ),
 
             m('.controls',
-                m('img', { src: PlayerView.cover, alt: "ALBUM", class: "left" }),
+                m('img', { src: PlayerView.cover, title: PlayerView.currentInfo.title, class: "left" }),
                 m('.center', [
                     m(".controlBtn", { onclick: () => { PlayerView.play() } }, m.trust(ICON.prevSong)),
                     m(".controlBtn", { onclick: () => { PlayerView.audio.paused ? PlayerView.audio.play() : PlayerView.audio.pause(); } }, PlayerView.audio.paused ? m.trust(ICON.play) : m.trust(ICON.pause)),

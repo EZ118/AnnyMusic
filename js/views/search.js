@@ -1,12 +1,12 @@
 class SearchView {
-    constructor() {}
+    constructor() { }
     oninit() {
         this.keyword = "";
-        this.platform = "netease";
+        this.platform = "kw";
         this.searchResults = [];
     }
     doSearch(keyword) {
-        if (!keyword) { return; }
+        if (!keyword || !keyword.trim()) { return; }
         getSearchResult(keyword, this.platform, (res) => {
             this.searchResults = res;
             m.redraw();
@@ -14,6 +14,11 @@ class SearchView {
     }
     doPlayMusic(musicInfo) {
         PlayerView.play(musicInfo);
+    }
+    getMusicLyric(musicInfo) {
+        getLyricSource(musicInfo, (res) => {
+            console.log(res);
+        });
     }
     view(vnode) {
         return [
@@ -40,6 +45,21 @@ class SearchView {
             ]),
             m(".search-results-area", [
                 m("h2", "Results"),
+                m(
+                    "select",
+                    {
+                        onchange: (e) => {
+                            this.platform = e.target.value;
+                            this.doSearch(this.keyword);
+                        }
+                    },
+                    [
+                        m("option", { value: "kw" }, "小蜗音乐"),
+                        m("option", { value: "kg" }, "小枸音乐"),
+                        m("option", { value: "tx" }, "小秋音乐"),
+                        m("option", { value: "wy" }, "小荟音乐"),
+                    ]
+                ),
                 m("table.search-results-list", [
                     m("thead", [
                         m("tr", [
@@ -54,9 +74,13 @@ class SearchView {
                             return m("tr", [
                                 m("td",
                                     m("img", {
-                                        src: result.cover,
+                                        src: result.pic,
                                         alt: result.name,
-                                        class: "cover"
+                                        class: "cover",
+                                        loading: "eager",
+                                        onerror: (e) => {
+                                            e.target.src = "./img/default_cover.svg";
+                                        }
                                     })
                                 ),
                                 m("td", result.name),
@@ -79,7 +103,13 @@ class SearchView {
                                         onclick: () => {
                                             this.doPlayMusic(result);
                                         }
-                                    }, " + ")
+                                    }, " + "),
+                                    m("button", {
+                                        title: "查看歌词",
+                                        onclick: () => {
+                                            this.getMusicLyric(result);
+                                        }
+                                    }, " 歌词获取 ")
                                 )
                             ]);
                         })
