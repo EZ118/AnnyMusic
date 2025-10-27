@@ -198,6 +198,7 @@
     width: 24px;
     border-radius:50%;
     cursor: pointer;
+    transition: all 0.1s;
 }
 
 .search-source .item:hover {
@@ -206,11 +207,7 @@
 
 .search-source .item:active,
 .search-source .item:focus {
-    outline: 3px solid var(--s-color-on-surface-variant);
-}
-
-.search-source .item.selected {
-    outline: 3px solid var(--s-color-on-surface-variant);
+    transform: scale(1.2);
 }
 
 

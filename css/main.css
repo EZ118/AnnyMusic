@@ -28,6 +28,23 @@ body {
     overflow: hidden;
 }
 
+/* 加载动画 */
+#loader {
+    position:fixed;
+    bottom: 18px;
+    left: 5px;
+    z-index: 3;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+}
+
+#loader svg {
+    stroke: var(--s-color-primary);
+    width: 24px;
+    height: 24px;
+}
+
 /* 导航栏 */
 nav {
     height: 100vh;
@@ -109,7 +126,7 @@ footer {
     bottom: 0;
     left: 50px;
     right: 0;
-    z-index: 3;
+    z-index: 4;
     transition: all 0.2s;
     width: calc(100vw - 50px);
     height: 80px;
@@ -221,16 +238,45 @@ footer .controls .controlBtn:active {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 999;
+    z-index: 3;
     width: 100vw;
-    height: calc(100vh - 80px);
+    height: 100vh;
+    padding-bottom: 80px;
     overflow: hidden;
     background-color: var(--s-color-surface-container-low);
     color: var(--s-color-on-background);
+    transition: top 0.2s;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
 }
 
+#lyric_view .left {
+    padding-left:15%;
+    width: 45%;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+}
 
+#lyric_view .left .cover {
+    width: 80%;
+    height:auto;
+    margin:10px 0;
+    background: transparent;
+    border-radius: 1em;
+}
 
+#lyric_view .right {
+    flex: 1;
+    height: 100%;
+    overflow: hidden scroll;
+}
 
 
 

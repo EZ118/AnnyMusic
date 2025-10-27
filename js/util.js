@@ -1,3 +1,11 @@
+function toggleLoader(show) {
+    if(show) {
+        document.getElementById("loader").style.display = "block";
+    } else {
+        document.getElementById("loader").style.display = "none";
+    }
+}
+
 function limitConsecutiveChars(str) {
     // 只允许字符串中连续出现n个相同字符
     const maxConsecutive = 10;

@@ -335,6 +335,7 @@ const LxApi = {
 
     request: (url, options, callback) => {
         console.log('[LxApi.request]', url, options);
+        toggleLoader(true);
 
         // 构建 fetch options
         const fetchOptions = {
@@ -395,9 +396,11 @@ const LxApi = {
                     headers: Object.fromEntries(resp.headers.entries()),
                     body: parsedBody,
                 });
+                toggleLoader(false);
             })
             .catch(err => {
                 callback(err, undefined);
+                toggleLoader(false);
             });
 
         return () => console.warn('取消请求未实现');

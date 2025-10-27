@@ -6,11 +6,11 @@ const MusicList = {
         return m("table.music-list", [
             m("thead", [
                 m("tr", [
-                    m("th", { style: { width: "fit-content" } }, "# "),
-                    m("th", { style: { width: "30%", minWidth: "100px" } }, "Name"),
+                    m("th", { style: { width: "42px" } }, "#"),
+                    m("th", { style: { width: "auto", minWidth: "100px" } }, "Name"),
                     m("th", { style: { width: "20%", minWidth: "50px" } }, "Artist"),
                     m("th", { style: { width: "20%", minWidth: "50px" } }, "Album"),
-                    m("th", " Actions")
+                    m("th", { style: { width: "145px" } }, " Actions")
                 ])
             ]),
             m("tbody",

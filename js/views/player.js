@@ -11,10 +11,14 @@ const LyricView = {
         if (!info) return;
 
         if (LyricView.isVisible) {
-            document.querySelector("#lyric_view").style.display = "none";
             document.querySelector("footer").style = "";
+            document.querySelector("#lyric_view").style.top = "100vh";
+            setTimeout(() => {
+                document.querySelector("#lyric_view").style.display = "none";
+            }, 200);
         } else {
             document.querySelector("#lyric_view").style.display = "block";
+            document.querySelector("#lyric_view").style.top = "0";
             document.querySelector("footer").style.left = "0";
             document.querySelector("footer").style.width = "100vw";
         }
@@ -35,7 +39,7 @@ const LyricView = {
     view(vnode) {
         return [
             m(".left", [
-                m("img", { class: "cover", src: LyricView.currentInfo.img, alt: "" }),
+                m("img", { class: "cover", src: LyricView.currentInfo.img, alt: "", onerror: (e) => { e.currentTarget.src="./img/default_cover.svg"; m.redraw(); } }),
                 m("div", [
                     m("h2", LyricView.currentInfo.name),
                     m("h3", LyricView.currentInfo.singer)
@@ -50,10 +54,13 @@ const LyricView = {
 
 const PlayerView = {
     oninit() {
-        PlayerView.currentInfo = {};
+        PlayerView.currentInfo = {
+            img: "./img/default_cover.svg",
+            name: "暂无歌曲",
+            singer: "选择歌曲以播放"
+        };
         PlayerView.duration = 0.01; // 音频总时长
         PlayerView.currentTime = 0; // 当前播放进度
-        PlayerView.cover = "./img/default_cover.svg"; // 歌曲封面
         PlayerView.audio = new Audio(); // 音频播放对象
 
         PlayerView.startProgressTracking(); // 自动更新播放进度
@@ -80,7 +87,6 @@ const PlayerView = {
             // 加载
             PlayerView.currentInfo = musicInfo;
             PlayerView.audio.src = newKey.mp3;
-            PlayerView.cover = newKey.img;
             PlayerView.audio.load();
 
             // 播放
@@ -138,7 +144,7 @@ const PlayerView = {
             ),
 
             m('.controls',
-                m('img', { src: PlayerView.cover, title: PlayerView.currentInfo.title, class: "left", onclick: PlayerView.toggleFullscreen }),
+                m('img', { src: PlayerView.currentInfo.img, title: PlayerView.currentInfo.title, class: "left", onclick: PlayerView.toggleFullscreen, onerror: (e) => { e.currentTarget.src="./img/default_cover.svg"; m.redraw(); } }),
                 m('.center', [
                     m(".controlBtn", { onclick: () => { PlayerView.play() } }, m.trust(ICON.prevSong)),
                     m(".controlBtn", { onclick: () => { PlayerView.audio.paused ? PlayerView.audio.play() : PlayerView.audio.pause(); } }, PlayerView.audio.paused ? m.trust(ICON.play) : m.trust(ICON.pause)),

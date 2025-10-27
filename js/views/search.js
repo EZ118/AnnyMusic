@@ -48,43 +48,43 @@ class SearchView {
                         "Platform: [",
                         m("button.item", {
                             style: {
-                                background: "#e0c723",
-                                title: "小蜗音乐"
+                                background: "#e0c723"
                             },
                             onclick: () => {
                                 this.platform = "kw";
                                 this.doSearch(this.keyword);
-                            }
+                            },
+                            title: "小蜗音乐"
                         }),
                         m("button.item", {
                             style: {
-                                background: "#b4c5ff",
-                                title: "小枸音乐"
+                                background: "#b4c5ff"
                             },
                             onclick: () => {
                                 this.platform = "kg";
                                 this.doSearch(this.keyword);
-                            }
+                            },
+                            title: "小枸音乐"
                         }),
                         m("button.item", {
                             style: {
-                                background: "#55df95",
-                                title: "小秋音乐"
+                                background: "#55df95"
                             },
                             onclick: () => {
                                 this.platform = "tx";
                                 this.doSearch(this.keyword);
-                            }
+                            },
+                            title: "小秋音乐"
                         }),
                         m("button.item", {
                             style: {
-                                background: "#ffb4a9",
-                                title: "小荟音乐"
+                                background: "#ffb4a9"
                             },
                             onclick: () => {
                                 this.platform = "wy";
                                 this.doSearch(this.keyword);
-                            }
+                            },
+                            title: "小荟音乐"
                         }),
                         "]"
                     ]

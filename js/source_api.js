@@ -88,7 +88,7 @@
                                     "name": card.SongName,
                                     "albumName": card.AlbumName,
                                     "singer": card.SingerName,
-                                    "img": card.Image.replace("{size}", "64"), // 网址的{size}部分是用数字表示正方形长宽
+                                    "img": card.Image.replace("{size}", "256"), // 网址的{size}部分是用数字表示正方形长宽
                                     "vip": card.SQPrivilege > 8
                                 };
                             } catch { }
