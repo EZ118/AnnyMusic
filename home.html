@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html lang="zh">
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="referrer" content="no-referrer" />
+	<meta name="referrer" content="no-referrer" />
 	<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0">
-    
+
 	<title>AnnyMusic</title>
 	<meta name="keywords" content="EZ118,AnnyMusic,AnyMusic,music,音乐,listen1,洛雪,lx,luoxue" />
 	<meta name='description' content="兼容洛雪音乐源的音乐播放器" />
-    
+
 	<link rel="icon" type="image/png" href="./img/icon_64x64.png">
 	<link rel="stylesheet" type="text/css" href="./css/material-theme.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 	<link rel="stylesheet" type="text/css" href="./css/view.css">
-    
+
 	<script src="./js/vendor/mithril.min.js"></script>
 	<script src="./js/vendor/sval.min.js"></script>
 	<script src="./js/vendor/pako.min.js"></script>
 	<script src="./js/vendor/crypto-js.min.js"></script>
 	<script src="./js/vendor/jsencrypt.min.js"></script>
 </head>
+
 <body>
 	<nav>
 		<!-- 导航栏 -->
@@ -29,9 +31,13 @@
 		<!--  主程序 -->
 	</main>
 
-	<footer>
+	<footer style>
 		<!-- 播放器 -->
 	</footer>
+
+	<div id="lyric_view" style="display:none;">
+		<!-- 歌词查看 -->
+	</div>
 
 	<script src="./js/icons.js"></script> <!-- 全局图标 -->
 	<script src="./js/util.js"></script> <!-- 工具函数（主要调用CRX的API） -->
@@ -40,4 +46,5 @@
 	<script src="./js/views/player.js"></script> <!-- 播放器 -->
 	<script src="./js/main.js" type="module"></script> <!-- 主程序 -->
 </body>
+
 </html>

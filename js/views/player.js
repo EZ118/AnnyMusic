@@ -1,5 +1,53 @@
 const defaultQuality = "128k";
 
+const LyricView = {
+    oninit() {
+        LyricView.isVisible = false;
+        LyricView.lyric = "";
+        LyricView.currentInfo = {};
+    },
+
+    toggle(info) {
+        if (!info) return;
+
+        if (LyricView.isVisible) {
+            document.querySelector("#lyric_view").style.display = "none";
+            document.querySelector("footer").style = "";
+        } else {
+            document.querySelector("#lyric_view").style.display = "block";
+            document.querySelector("footer").style.left = "0";
+            document.querySelector("footer").style.width = "100vw";
+        }
+        LyricView.isVisible = !LyricView.isVisible;
+
+        if (LyricView.currentInfo != info) {
+            LyricView.currentInfo = info;
+            LyricView.lyric = "Loading...";
+            m.redraw();
+            
+            getLyricSource(info, (lrc) => {
+                LyricView.lyric = lrc;
+                m.redraw();
+            });
+        }
+    },
+
+    view(vnode) {
+        return [
+            m(".left", [
+                m("img", { class: "cover", src: LyricView.currentInfo.img, alt: "" }),
+                m("div", [
+                    m("h2", LyricView.currentInfo.name),
+                    m("h3", LyricView.currentInfo.singer)
+                ])
+            ]),
+            m(".right", [
+                m("pre", { class: "lyrics" }, LyricView.lyric)
+            ])
+        ]
+    }
+}
+
 const PlayerView = {
     oninit() {
         PlayerView.currentInfo = {};
@@ -24,9 +72,15 @@ const PlayerView = {
                 PlayerView.audio.pause();
             }
 
+            // 特殊源处理
+            if(musicInfo.source == "kw") {
+                newKey.mp3 = newKey.mp3.replace(/:\/\/([^.]+)\.sycdn\.kuwo\.cn\//, '://$1-sycdn.kuwo.cn/');
+            }
+
             // 加载
+            PlayerView.currentInfo = musicInfo;
             PlayerView.audio.src = newKey.mp3;
-            PlayerView.cover = newKey.cover;
+            PlayerView.cover = newKey.img;
             PlayerView.audio.load();
 
             // 播放
@@ -38,7 +92,7 @@ const PlayerView = {
                 .catch(err => {
                     console.error('[PlayerView.play]', err);
                 });
-            
+
             // 获取音频时长
             PlayerView.audio.addEventListener('loadedmetadata', () => {
                 console.log('[PlayerView.play] Metadata loaded, music duration', PlayerView.audio.duration);
@@ -72,6 +126,11 @@ const PlayerView = {
         // console.log(percentX, PlayerView.duration);
         m.redraw();
     },
+
+    toggleFullscreen() {
+        LyricView.toggle(PlayerView.currentInfo);
+    },
+
     view(vnode) {
         return [
             m('.progressbar', { onclick: PlayerView.handleMouseClick },
@@ -79,7 +138,7 @@ const PlayerView = {
             ),
 
             m('.controls',
-                m('img', { src: PlayerView.cover, title: PlayerView.currentInfo.title, class: "left" }),
+                m('img', { src: PlayerView.cover, title: PlayerView.currentInfo.title, class: "left", onclick: PlayerView.toggleFullscreen }),
                 m('.center', [
                     m(".controlBtn", { onclick: () => { PlayerView.play() } }, m.trust(ICON.prevSong)),
                     m(".controlBtn", { onclick: () => { PlayerView.audio.paused ? PlayerView.audio.play() : PlayerView.audio.pause(); } }, PlayerView.audio.paused ? m.trust(ICON.play) : m.trust(ICON.pause)),

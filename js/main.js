@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* 渲染播放器 */
     m.mount(document.querySelector("footer"), PlayerView);
+    m.mount(document.querySelector("#lyric_view"), LyricView);
 
     /* 创建路由 */
     m.route(document.querySelector("main"), "/home", {

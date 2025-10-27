@@ -1,0 +1,53 @@
+// MusicList 组件（用于搜索、播放列表...）
+const MusicList = {
+    view: ({ attrs }) => {
+        const listItems = attrs.data;
+
+        return m("table.music-list", [
+            m("thead", [
+                m("tr", [
+                    m("th", { style: { width: "fit-content" } }, "# "),
+                    m("th", { style: { width: "30%", minWidth: "100px" } }, "Name"),
+                    m("th", { style: { width: "20%", minWidth: "50px" } }, "Artist"),
+                    m("th", { style: { width: "20%", minWidth: "50px" } }, "Album"),
+                    m("th", " Actions")
+                ])
+            ]),
+            m("tbody",
+                listItems.map((item, index) => {
+                    return m("tr", [
+                        m("td", index + 1),
+                        m("td", item.name),
+                        m("td", item.singer),
+                        m("td", item.albumName),
+                        m("td",
+                            m("button", {
+                                title: "Play now",
+                                class: "icon-btn",
+                                onclick: () => {
+                                    PlayerView.play(item);
+                                }
+                            }, m.trust(ICON.play)),
+                            m("button", {
+                                title: "Add to favorites",
+                                class: "icon-btn",
+                                onclick: () => {
+                                    PlayerView.addToFavorites(item);
+                                }
+                            }, m.trust(ICON.star)),
+                            m("button", {
+                                title: "Add to current playlist",
+                                class: "icon-btn",
+                                onclick: () => {
+                                    PlayerView.addToPlaylist(item);
+                                }
+                            }, m.trust(ICON.add))
+                        )
+                    ]);
+                })
+            )
+        ])
+    }
+};
+
+export default MusicList;

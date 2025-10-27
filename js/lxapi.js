@@ -303,14 +303,23 @@ const LxApi = {
         // }
         // return result;
 
+        let failure = null;
         for (const handler of eventHandlers[eventName]) {
             try {
                 // 尝试执行每个处理函数，只要有一个成功就立即返回结果
                 return await Promise.resolve(handler(payload));
             } catch (err) {
                 // 保存第一个错误，如果所有都失败则最终抛出这个错误
-                return Promise.reject(err);
+                failure = Promise.reject(err);
             }
+        }
+
+        if (failure) {
+            // 所有处理函数都失败，则抛出第一个错误
+            throw failure;
+        } else {
+            // 所有处理函数都成功，返回 undefined
+            return Promise.reject("未知错误");
         }
     },
 

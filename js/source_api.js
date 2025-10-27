@@ -20,13 +20,13 @@
                             try {
                                 return {
                                     "source": source,   // 音乐来源（平台）
-                                    "id": card.id,      // 音乐ID
-                                    "hash": "",         // 歌曲的Hash值
+                                    "songmid": card.id, // 音乐ID
+                                    "hash": null,       // 歌曲的Hash值
                                     "name": card.name,  // 音乐名称
-                                    "album": card.album.name,   // 专辑名称
-                                    "artist": card.artists[0].name ?? "",       // 艺术家
-                                    "pic": card.album.artist.img1v1Url ?? "",   // 封面URL
-                                    "vip": card.fee == 1    // 标记是否为VIP
+                                    "albumName": card.album.name,   // 专辑名称
+                                    "singer": card.artists[0].name ?? "",       // 艺术家
+                                    "img": card.album.artist.img1v1Url ?? "",   // 封面URL
+                                    "vip": card.fee == 1// 标记是否为VIP
                                 }
                             } catch { }
                         });
@@ -47,12 +47,12 @@
                             try {
                                 return {
                                     "source": source,   // 音乐来源（平台）
-                                    "id": card.mid,     // 音乐ID
-                                    "hash": "",         // 歌曲的Hash值
+                                    "songmid": card.mid,// 音乐ID
+                                    "hash": null,       // 歌曲的Hash值
                                     "name": card.name,  // 音乐名称
-                                    "album": card.album.name,   // 专辑名称
-                                    "artist": card.singer[0].name,  // 艺术家
-                                    "pic": `https://y.qq.com/music/photo_new/T002R300x300M000${card.album.mid}.jpg?max_age=2592000`,    // 封面URL
+                                    "albumName": card.album.name,   // 专辑名称
+                                    "singer": card.singer[0].name,  // 艺术家
+                                    "img": `https://y.qq.com/music/photo_new/T002R300x300M000${card.album.mid}.jpg?max_age=2592000`,    // 封面URL
                                     "vip": (card.pay.pay_play == 1 || card.action.msgid != 0)     // 标记是否为VIP
                                 };
                             } catch { }
@@ -65,12 +65,12 @@
                             try {
                                 return {
                                     "source": source,
-                                    "id": card.MUSICRID.replace("MUSIC_", ""),
-                                    "hash": "",
+                                    "songmid": card.MUSICRID.replace("MUSIC_", ""),
+                                    "hash": null,
                                     "name": card.NAME,
-                                    "album": card.ALBUM,
-                                    "artist": card.ARTIST,
-                                    "pic": "https://img2.kuwo.cn/star/albumcover/" + (card.web_albumpic_short || card.web_artistpic_short || card.MVPIC),
+                                    "albumName": card.ALBUM,
+                                    "singer": card.ARTIST,
+                                    "img": "https://img2.kuwo.cn/star/albumcover/" + (card.web_albumpic_short || card.web_artistpic_short || card.MVPIC),
                                     "vip": card.tpay != 0
                                 };
                             } catch { }
@@ -83,12 +83,12 @@
                             try {
                                 return {
                                     "source": source,
-                                    "id": card.Audioid,
+                                    "songmid": card.Audioid,
                                     "hash": card.FileHash,
                                     "name": card.SongName,
-                                    "album": card.AlbumName,
-                                    "artist": card.SingerName,
-                                    "pic": card.Image.replace("{size}", "64"), // 网址的{size}部分是用数字表示正方形长宽
+                                    "albumName": card.AlbumName,
+                                    "singer": card.SingerName,
+                                    "img": card.Image.replace("{size}", "64"), // 网址的{size}部分是用数字表示正方形长宽
                                     "vip": card.SQPrivilege > 8
                                 };
                             } catch { }
@@ -99,20 +99,20 @@
         }
     }
 
-    const handleLyricResult = async (source, id) => {
+    const handleLyricResult = async (source, info) => {
         switch (source) {
             case 'wy':
-                return httpFetch(`https://music.163.com/api/song/lyric?id=${id}&lv=-1&kv=-1&tv=-1`)
+                return httpFetch(`https://music.163.com/api/song/lyric?id=${info.songmid}}&lv=-1&kv=-1&tv=-1`)
                     .then((res) => {
                         return res.body.lrc.lyric;
                     });
             case 'tx':
-                return httpFetch(`https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?format=json&nobase64=1&songmid=${id}`)
+                return httpFetch(`https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?format=json&nobase64=1&songmid=${info.songmid}`)
                     .then((res) => {
                         return res.body.lyric || Promise.reject("暂无歌词");
                     });
             case 'kw':
-                return httpFetch(`https://www.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${id}&httpsStatus=1&plat=web_www&from=`)
+                return httpFetch(`https://www.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${info.songmid}&httpsStatus=1&plat=web_www&from=`)
                     .then((res) => {
                         var lrc = res.body.data.lrclist;
                         var lrcStr = "";
@@ -129,7 +129,7 @@
                         return lrcStr;
                     });
             case 'kg':
-                return httpFetch(`http://krcs.kugou.com/search?ver=1&man=yes&client=mobi&hash=${id}`)
+                return httpFetch(`http://krcs.kugou.com/search?ver=1&man=yes&client=mobi&hash=${info.hash}`)
                     .then((res) => {
                         const lrcId = res.body.candidates[0].id;
                         const lrcAccesskey = res.body.candidates[0].accesskey;
@@ -154,9 +154,9 @@
                 }
                 return handleSearchResult(source, info.keyword, info.page);
             case 'lyric':
-                return handleLyricResult(source, info.musicInfo.songmid);
+                return handleLyricResult(source, info.musicInfo);
             default:
-                return Promise.reject('不支持的事件名');
+                return Promise.reject('不支持的事件名（内置搜索源，请忽略该消息）');
         }
     })
 
@@ -165,13 +165,10 @@
 })();
 
 function getLyricSource(key, callback) {
-    if (key.source == "kg") {
-        key.id = key.hash;
-    }
     LxApi.emit(LxApi.EVENT_NAMES.request, {
         source: key.source,
         action: 'lyric',
-        info: { musicInfo: { songmid: key.id } }
+        info: { musicInfo: key }
     }).then((lrc) => {
         callback(lrc);
     }).catch((error) => {
@@ -197,7 +194,7 @@ function getMusicSource(key, quality, callback) {
     LxApi.emit(LxApi.EVENT_NAMES.request, {
         source: key.source,
         action: 'musicUrl',
-        info: { type: quality, musicInfo: { songmid: key.id } }
+        info: { type: quality, musicInfo: key }
     }).then((url) => {
         key.mp3 = url;
         callback(key);
