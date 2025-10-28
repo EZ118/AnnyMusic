@@ -30,7 +30,7 @@ body {
 
 /* 加载动画 */
 #loader {
-    position:fixed;
+    position: fixed;
     bottom: 18px;
     left: 5px;
     z-index: 3;
@@ -177,6 +177,7 @@ footer .controls .left {
     width: 55px;
     height: 55px;
     margin: 10px;
+    margin-right: 20px;
     border-radius: 10px;
     cursor: pointer;
 }
@@ -194,13 +195,13 @@ footer .controls .center {
 footer .controls .right {
     width: fit-content;
     min-width: 75px;
-    max-width: 85px;
+    max-width: 100px;
     height: 75px;
     padding: 2px 3px;
     margin: 0px;
     color: var(--s-color-on-surface-variant);
     opacity: 0.6;
-    font-size: 12px;
+    font-size: 1em;
     text-align: right;
 }
 
@@ -240,8 +241,7 @@ footer .controls .controlBtn:active {
     left: 0;
     z-index: 3;
     width: 100vw;
-    height: 100vh;
-    padding-bottom: 80px;
+    height: calc(100vh - 80px);
     overflow: hidden;
     background-color: var(--s-color-surface-container-low);
     color: var(--s-color-on-background);
@@ -254,7 +254,7 @@ footer .controls .controlBtn:active {
 }
 
 #lyric_view .left {
-    padding-left:15%;
+    padding-left: 15%;
     width: 45%;
     height: 100%;
     overflow: hidden;
@@ -266,18 +266,39 @@ footer .controls .controlBtn:active {
 
 #lyric_view .left .cover {
     width: 80%;
-    height:auto;
-    margin:10px 0;
+    height: auto;
+    margin: 10px 0;
     background: transparent;
     border-radius: 1em;
 }
 
 #lyric_view .right {
-    flex: 1;
+    width: 55%;
+    padding-right: 15%;
     height: 100%;
     overflow: hidden scroll;
+    margin: 0;
+    scrollbar-width: none;
 }
 
+#lyric_view .right::-webkit-scrollbar {
+    display: none;
+    /* Chrome, Safari and Opera */
+}
+
+#lyric_view .right p {
+    margin: 10px 0;
+    font-size: 1.2em;
+    font-weight: normal;
+    transition: all 0.1s;
+    color: var(--s-color-on-background);
+    opacity: 0.5;
+}
+
+#lyric_view .right p.active {
+    font-size: 1.6em;
+    opacity: 1;
+}
 
 
 

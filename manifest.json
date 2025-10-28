@@ -12,7 +12,8 @@
     "cookies",
     "tabs",
     "scripting",
-    "storage"
+    "storage",
+    "declarativeNetRequest"
   ],
   "host_permissions": [
     "*://*/*"

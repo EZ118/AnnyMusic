@@ -102,7 +102,7 @@
     const handleLyricResult = async (source, info) => {
         switch (source) {
             case 'wy':
-                return httpFetch(`https://music.163.com/api/song/lyric?id=${info.songmid}}&lv=-1&kv=-1&tv=-1`)
+                return httpFetch(`https://music.163.com/api/song/lyric?id=${info.songmid}&os=pc&lv=-1&kv=-1&tv=-1&csrf_token=`)
                     .then((res) => {
                         return res.body.lrc.lyric;
                     });

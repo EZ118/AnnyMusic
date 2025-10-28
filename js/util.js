@@ -1,5 +1,5 @@
 function toggleLoader(show) {
-    if(show) {
+    if (show) {
         document.getElementById("loader").style.display = "block";
     } else {
         document.getElementById("loader").style.display = "none";
@@ -206,4 +206,46 @@ function pickFile(accept, callback) {
 
     // 触发点击
     input.click();
+}
+
+function parseLrc(lrcText) {
+    const lines = lrcText.split('\n');
+    const result = [];
+
+    // 匹配时间标签的正则表达式 [mm:ss.xx] 或 [mm:ss]
+    const timeRegex = /^\[(\d{1,2}):(\d{1,2})(?:\.(\d{1,3}))?\]/;
+
+    for (const line of lines) {
+        // 跳过空行
+        if (!line.trim()) continue;
+
+        // 跳过元数据行（以 [字母: 开头）
+        if (/^\[[a-zA-Z]+:.*\]/.test(line)) continue;
+
+        const match = timeRegex.exec(line);
+        if (match) {
+            const minutes = parseInt(match[1]);
+            const seconds = parseInt(match[2]);
+            const milliseconds = match[3] ? parseInt(match[3].padEnd(3, '0')) : 0;
+
+            // 计算总秒数（带小数）
+            const totalSeconds = minutes * 60 + seconds + milliseconds / 1000;
+
+            // 获取歌词文本（去掉时间标签后的内容）
+            const text = line.slice(match[0].length).trim();
+
+            // 只有当有歌词文本时才添加到结果中
+            if (text) {
+                result.push({
+                    time: totalSeconds,
+                    text: text
+                });
+            }
+        }
+    }
+
+    // 按时间排序
+    result.sort((a, b) => a.time - b.time);
+
+    return result;
 }

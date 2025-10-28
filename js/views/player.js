@@ -3,50 +3,111 @@ const defaultQuality = "128k";
 const LyricView = {
     oninit() {
         LyricView.isVisible = false;
-        LyricView.lyric = "";
+        LyricView.lyric = [];
         LyricView.currentInfo = {};
+        LyricView.isVisible = false;
+
+        LyricView.currentLrcLine = -1; // 歌词行数计数器
+
+        LyricView.startProgressTracking();
     },
+
 
     toggle(info) {
         if (!info) return;
 
         if (LyricView.isVisible) {
+            // 隐藏歌词面板
             document.querySelector("footer").style = "";
             document.querySelector("#lyric_view").style.top = "100vh";
             setTimeout(() => {
                 document.querySelector("#lyric_view").style.display = "none";
             }, 200);
         } else {
-            document.querySelector("#lyric_view").style.display = "block";
+            // 显示歌词面板
+            document.querySelector("#lyric_view").style.display = "flex";
             document.querySelector("#lyric_view").style.top = "0";
             document.querySelector("footer").style.left = "0";
             document.querySelector("footer").style.width = "100vw";
+
+            // 载入歌词
+            if (LyricView.currentInfo != info || LyricView.lyric.length <= 2) {
+                LyricView.currentInfo = info;
+                LyricView.lyric = [
+                    { time: 0, text: "加载中..." }
+                ];
+                m.redraw();
+
+                // 获取歌词
+                if (LyricView.currentInfo.songmid) {
+                    getLyricSource(info, (lrc) => {
+                        if (!lrc) {
+                            LyricView.lyric = [
+                                { time: 0, text: "暂无歌词" }
+                            ];
+                        } else {
+                            LyricView.currentLrcLine = -1;
+                            LyricView.lyric = parseLrc(lrc);
+                        }
+                        m.redraw();
+                    });
+                }
+            }
         }
         LyricView.isVisible = !LyricView.isVisible;
+    },
 
-        if (LyricView.currentInfo != info) {
-            LyricView.currentInfo = info;
-            LyricView.lyric = "Loading...";
-            m.redraw();
-            
-            getLyricSource(info, (lrc) => {
-                LyricView.lyric = lrc;
+    scrollToLine(n) {
+        const percent = 0.3; // 30%
+        const container = document.querySelector("#lyric_view .right");
+        if (!container) return;
+
+        const target = container.children[n];
+        if (!target) return;
+
+        LyricView.currentLrcLine = n;
+
+        const scrollTop = target.offsetTop - (container.clientHeight * percent);
+        container.scrollTo({ top: scrollTop, behavior: 'smooth' });
+    },
+
+
+    startProgressTracking() {
+        setInterval(() => {
+            if (PlayerView.audio.duration && !PlayerView.audio.paused) {
+                const currentTime = PlayerView.currentTime;
+
+                if (!LyricView.lyric || LyricView.lyric.length === 0) return;
+
+                let currentLineIndex = 0;
+                for (let i = LyricView.lyric.length - 1; i >= 0; i--) {
+                    if (LyricView.lyric[i].time <= currentTime + 1) {
+                        if (i != LyricView.currentLrcLine) {
+                            LyricView.scrollToLine(i);
+                        }
+                        break;
+                    }
+                }
                 m.redraw();
-            });
-        }
+            }
+        }, 1000);
     },
 
     view(vnode) {
         return [
             m(".left", [
-                m("img", { class: "cover", src: LyricView.currentInfo.img, alt: "", onerror: (e) => { e.currentTarget.src="./img/default_cover.svg"; m.redraw(); } }),
+                m("img", { class: "cover", src: LyricView.currentInfo.img, alt: "", onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
                 m("div", [
                     m("h2", LyricView.currentInfo.name),
                     m("h3", LyricView.currentInfo.singer)
                 ])
             ]),
-            m(".right", [
-                m("pre", { class: "lyrics" }, LyricView.lyric)
+            m("div.right", [
+                m("div", { style: { height: "30vh" } }),
+                LyricView.lyric.map((item, index) => {
+                    return m("p", { class: (LyricView.currentLrcLine == index) ? "active" : "" }, item.text);
+                }),
+                m("div", { style: { height: "70vh" } })
             ])
         ]
     }
@@ -55,9 +116,14 @@ const LyricView = {
 const PlayerView = {
     oninit() {
         PlayerView.currentInfo = {
+            songmid: null,
+            hash: null,
             img: "./img/default_cover.svg",
             name: "暂无歌曲",
-            singer: "选择歌曲以播放"
+            singer: "选择歌曲以播放",
+            albumName: "",
+            mp3: null, // 音频链接
+            source: "local",
         };
         PlayerView.duration = 0.01; // 音频总时长
         PlayerView.currentTime = 0; // 当前播放进度
@@ -80,7 +146,7 @@ const PlayerView = {
             }
 
             // 特殊源处理
-            if(musicInfo.source == "kw") {
+            if (musicInfo.source == "kw") {
                 newKey.mp3 = newKey.mp3.replace(/:\/\/([^.]+)\.sycdn\.kuwo\.cn\//, '://$1-sycdn.kuwo.cn/');
             }
 
@@ -144,7 +210,7 @@ const PlayerView = {
             ),
 
             m('.controls',
-                m('img', { src: PlayerView.currentInfo.img, title: PlayerView.currentInfo.title, class: "left", onclick: PlayerView.toggleFullscreen, onerror: (e) => { e.currentTarget.src="./img/default_cover.svg"; m.redraw(); } }),
+                m('img', { src: PlayerView.currentInfo.img, title: PlayerView.currentInfo.title, class: "left", onclick: PlayerView.toggleFullscreen, onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
                 m('.center', [
                     m(".controlBtn", { onclick: () => { PlayerView.play() } }, m.trust(ICON.prevSong)),
                     m(".controlBtn", { onclick: () => { PlayerView.audio.paused ? PlayerView.audio.play() : PlayerView.audio.pause(); } }, PlayerView.audio.paused ? m.trust(ICON.play) : m.trust(ICON.pause)),
