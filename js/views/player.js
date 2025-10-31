@@ -12,23 +12,31 @@ const LyricView = {
         LyricView.startProgressTracking();
     },
 
-
-    toggle(info) {
-        if (!info) return;
-
-        if (LyricView.isVisible) {
+    show(mode) {
+        if (mode != false) {
+            // 显示歌词面板
+            document.querySelector("#lyric_view").style.display = "flex";
+            document.querySelector("#lyric_view").style.top = "0";
+            document.querySelector("footer").style.left = "0";
+            document.querySelector("footer").style.width = "100vw";
+            LyricView.isVisible = true;
+        } else {
             // 隐藏歌词面板
             document.querySelector("footer").style = "";
             document.querySelector("#lyric_view").style.top = "100vh";
             setTimeout(() => {
                 document.querySelector("#lyric_view").style.display = "none";
             }, 200);
-        } else {
-            // 显示歌词面板
-            document.querySelector("#lyric_view").style.display = "flex";
-            document.querySelector("#lyric_view").style.top = "0";
-            document.querySelector("footer").style.left = "0";
-            document.querySelector("footer").style.width = "100vw";
+            LyricView.isVisible = false;
+        }
+    },
+
+
+    toggle(info) {
+        if (!info) return;
+
+        if (!LyricView.isVisible) {
+            LyricView.show(true);
 
             // 载入歌词
             if (LyricView.currentInfo != info || LyricView.lyric.length <= 2) {
@@ -51,10 +59,16 @@ const LyricView = {
                         }
                         m.redraw();
                     });
+                } else {
+                    LyricView.lyric = [
+                        { time: 0, text: "无播放内容" }
+                    ];
+                    m.redraw();
                 }
             }
+        } else {
+            LyricView.show(false);
         }
-        LyricView.isVisible = !LyricView.isVisible;
     },
 
     scrollToLine(n) {
@@ -81,7 +95,7 @@ const LyricView = {
 
                 let currentLineIndex = 0;
                 for (let i = LyricView.lyric.length - 1; i >= 0; i--) {
-                    if (LyricView.lyric[i].time <= currentTime + 1) {
+                    if (LyricView.lyric[i].time <= currentTime + 0.7) {
                         if (i != LyricView.currentLrcLine) {
                             LyricView.scrollToLine(i);
                         }
@@ -90,22 +104,36 @@ const LyricView = {
                 }
                 m.redraw();
             }
-        }, 1000);
+        }, 700);
+    },
+
+    jumpTo(time) {
+        PlayerView.currentTime = PlayerView.audio.currentTime = time;
     },
 
     view(vnode) {
         return [
             m(".left", [
-                m("img", { class: "cover", src: LyricView.currentInfo.img, alt: "", onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
+                m("button.icon-btn", { onclick: () => { LyricView.show(false); } }, m.trust(ICON.expand)),
+                m("img.cover", { src: LyricView.currentInfo.img, alt: "", onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
                 m("div", [
                     m("h2", LyricView.currentInfo.name),
                     m("h3", LyricView.currentInfo.singer)
                 ])
             ]),
-            m("div.right", [
+            m(".right", [
                 m("div", { style: { height: "30vh" } }),
                 LyricView.lyric.map((item, index) => {
-                    return m("p", { class: (LyricView.currentLrcLine == index) ? "active" : "" }, item.text);
+                    return m(
+                        "p",
+                        {
+                            class: (LyricView.currentLrcLine == index) ? "active" : "",
+                            onclick: () => {
+                                LyricView.jumpTo(item.time);
+                            }
+                        },
+                        item.text
+                    );
                 }),
                 m("div", { style: { height: "70vh" } })
             ])

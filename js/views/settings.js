@@ -2,10 +2,10 @@ import Tabs from "../components/tabs.js";
 
 class SettingsView {
     constructor() {
-        this.sourceList = getStorageSync("externalMusicSource") || [];
     }
 
     oninit(vnode) {
+        this.sourceList = getStorageSync("externalMusicSource") || [];
         vnode.state.selected = 0;
     }
 

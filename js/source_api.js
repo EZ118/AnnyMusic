@@ -25,7 +25,7 @@
                                     "name": card.name,  // 音乐名称
                                     "albumName": card.album.name,   // 专辑名称
                                     "singer": card.artists[0].name ?? "",       // 艺术家
-                                    "img": card.album.artist.img1v1Url ?? "",   // 封面URL
+                                    "img": card.album.artist.img1v1Url.includes("UleORITEDbvrOLV0Q8A==/5639395138885805") ? "" : card.album.artist.img1v1Url,   // 封面URL
                                     "vip": card.fee == 1// 标记是否为VIP
                                 }
                             } catch { }

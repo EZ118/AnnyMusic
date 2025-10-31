@@ -1,4 +1,8 @@
-﻿html,
+﻿/*
+ * This file contains the css for navigation bar, view container, player (includes lyric) and individual components.
+ */
+
+html,
 body {
     padding: 0;
     margin: 0;
@@ -267,9 +271,17 @@ footer .controls .controlBtn:active {
 #lyric_view .left .cover {
     width: 80%;
     height: auto;
+    max-height: calc(100vh - 80px);
     margin: 10px 0;
     background: transparent;
     border-radius: 1em;
+}
+
+#lyric_view .left button.icon-btn {
+    position:absolute;
+    z-index: 4;
+    top:10px;
+    left:10px;
 }
 
 #lyric_view .right {
@@ -293,6 +305,7 @@ footer .controls .controlBtn:active {
     transition: all 0.1s;
     color: var(--s-color-on-background);
     opacity: 0.5;
+    cursor: pointer;
 }
 
 #lyric_view .right p.active {

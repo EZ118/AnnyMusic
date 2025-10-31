@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     m.route(document.querySelector("main"), "/home", {
         "/home": HomeView,
         "/playlist": PlaylistView,
+		"/playlist/:id": PlaylistView,
         "/search": SearchView,
         "/settings": SettingsView
     })
@@ -89,67 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		console.log('✅ Console 已恢复！');
 	}, 500);
 });
-
-
-
-
-/*
-
-
-        */
-
-const uni = {
-	showToast: function (str) {
-		try {
-			if (typeof (window.via) == "object") { window.via.toast(str.title); }
-			else if (typeof (window.mbrowser) == "object") { window.mbrowser.showToast(str.title); }
-			else { alert(str.title); }
-		} catch {
-			alert(str.title);
-		}
-	},
-	showModal: function (options) {
-		if (options.confirmText) {
-			var tt = confirm(`【${options.title}】\n${options.content}`);
-			if (tt) {
-				options.success({ "cancel": false, "confirm": true });
-			} else {
-				options.success({ "cancel": true, "confirm": false });
-			}
-		} else {
-            alert(`【${options.title}】\n${options.content}`);
-		}
-		console.log(options);
-	},
-
-	/* STORAGE */
-	setStorageSync: function (key, val) {
-		localStorage.setItem(key, val);
-	},
-	getStorageSync: function (key) {
-		return localStorage.getItem(key);
-	},
-
-	/* CLIPBOARD */
-	getClipboardData: async function (options) {
-		const clipboardObj = navigator.clipboard;
-		try {
-			const text = await navigator.clipboard.readText();
-			options.success({ "data": text }); // 直接传递text
-		} catch (err) {
-			options.fail(err); // 直接传递错误
-		}
-	},
-	setClipboardData: async function (options) {
-		const clipboardObj = navigator.clipboard;
-		try {
-			await navigator.clipboard.writeText(options.data);
-			options.success({ "data": options.data }); // 直接传递data
-		} catch (err) {
-			options.fail(err); // 直接传递错误
-		}
-	}
-};
 
 
 // PetiteVue.createApp({

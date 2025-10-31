@@ -4,7 +4,7 @@ class SearchView {
     constructor() { }
     oninit() {
         this.keyword = "";
-        this.platform = "kw";
+        this.platform = "wy"; // 初始默认搜索小蜗音乐
         this.searchResults = [];
     }
     doSearch(keyword) {
@@ -48,13 +48,13 @@ class SearchView {
                         "Platform: [",
                         m("button.item", {
                             style: {
-                                background: "#e0c723"
+                                background: "#ffb4a9"
                             },
                             onclick: () => {
-                                this.platform = "kw";
+                                this.platform = "wy";
                                 this.doSearch(this.keyword);
                             },
-                            title: "小蜗音乐"
+                            title: "小荟音乐"
                         }),
                         m("button.item", {
                             style: {
@@ -68,6 +68,16 @@ class SearchView {
                         }),
                         m("button.item", {
                             style: {
+                                background: "#e0c723"
+                            },
+                            onclick: () => {
+                                this.platform = "kw";
+                                this.doSearch(this.keyword);
+                            },
+                            title: "小蜗音乐"
+                        }),
+                        m("button.item", {
+                            style: {
                                 background: "#55df95"
                             },
                             onclick: () => {
@@ -75,16 +85,6 @@ class SearchView {
                                 this.doSearch(this.keyword);
                             },
                             title: "小秋音乐"
-                        }),
-                        m("button.item", {
-                            style: {
-                                background: "#ffb4a9"
-                            },
-                            onclick: () => {
-                                this.platform = "wy";
-                                this.doSearch(this.keyword);
-                            },
-                            title: "小荟音乐"
                         }),
                         "]"
                     ]
