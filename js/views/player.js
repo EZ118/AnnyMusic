@@ -31,6 +31,28 @@ const LyricView = {
         }
     },
 
+    load(info) {
+        if (info) LyricView.currentInfo = info;
+        if (LyricView.currentInfo.songmid) {
+            getLyricSource(LyricView.currentInfo, (lrc) => {
+                if (!lrc) {
+                    LyricView.lyric = [
+                        { time: 0, text: "暂无歌词" }
+                    ];
+                } else {
+                    LyricView.currentLrcLine = -1;
+                    LyricView.lyric = parseLrc(lrc);
+                }
+                m.redraw();
+            });
+        } else {
+            LyricView.lyric = [
+                { time: 0, text: "无播放内容" }
+            ];
+            m.redraw();
+        }
+    },
+
 
     toggle(info) {
         if (!info) return;
@@ -47,24 +69,7 @@ const LyricView = {
                 m.redraw();
 
                 // 获取歌词
-                if (LyricView.currentInfo.songmid) {
-                    getLyricSource(info, (lrc) => {
-                        if (!lrc) {
-                            LyricView.lyric = [
-                                { time: 0, text: "暂无歌词" }
-                            ];
-                        } else {
-                            LyricView.currentLrcLine = -1;
-                            LyricView.lyric = parseLrc(lrc);
-                        }
-                        m.redraw();
-                    });
-                } else {
-                    LyricView.lyric = [
-                        { time: 0, text: "无播放内容" }
-                    ];
-                    m.redraw();
-                }
+                LyricView.load();
             }
         } else {
             LyricView.show(false);
@@ -289,7 +294,14 @@ const PlayerView = {
                 PlayerView.currentTime = 0;
                 PlayerView.duration = PlayerView.audio.duration;
             });
-        })
+        });
+
+
+
+        // 刷新歌词
+        if(LyricView.isVisible) {
+            LyricView.load(musicInfo);
+        }
     },
 
     prevSong() {

@@ -261,7 +261,7 @@ footer .controls .controlBtn:active {
     padding-left: 15%;
     width: 45%;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -271,7 +271,7 @@ footer .controls .controlBtn:active {
 #lyric_view .left .cover {
     width: 80%;
     height: auto;
-    max-height: calc(100vh - 80px);
+    max-height: calc(100vh - 100px);
     margin: 10px 0;
     background: transparent;
     border-radius: 1em;

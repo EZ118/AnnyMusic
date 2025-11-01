@@ -27,8 +27,18 @@ class SettingsView {
                 this.sourceList.push(metadata);
                 setStorageSync("externalMusicSource", this.sourceList);
                 alert("已添加，下次加载时生效");
+                m.redraw();
             }
         });
+    }
+
+    deleteMusicSource(index) {
+        const res = confirm("Are you sure to delete this music source?");
+        if (res) {
+            this.sourceList.splice(index, 1);
+            setStorageSync(this.sourceList);
+            m.redraw();
+        }
     }
 
     view(vnode) {
@@ -62,7 +72,21 @@ class SettingsView {
                             ]),
 
                             m("label", "自定义源"),
-                            "当前音源: ",
+                            m("ol",
+                                this.sourceList.map((item, index) => {
+                                    return m(
+                                        "il",
+                                        { style: { display: "block" } },
+                                        [
+                                            item.name,
+                                            " ",
+                                            m("button.icon-btn", {
+                                                onclick: () => this.deleteMusicSource(index)
+                                            }, m.trust(ICON.delete))
+                                        ]
+                                    );
+                                })
+                            ),
                             m("button", {
                                 onclick: () => {
                                     this.importMusicSource()
