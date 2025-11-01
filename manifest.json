@@ -1,6 +1,6 @@
 {
   "name": "AnnyMusic",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "兼容洛雪音乐源的音乐播放器（不内置音源）",
   "manifest_version": 3,
   "icons": {

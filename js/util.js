@@ -1,18 +1,10 @@
 function toggleLoader(show) {
+    // 显示或隐藏加载动画
     if (show) {
         document.getElementById("loader").style.display = "block";
     } else {
         document.getElementById("loader").style.display = "none";
     }
-}
-
-function limitConsecutiveChars(str) {
-    // 只允许字符串中连续出现n个相同字符
-    const maxConsecutive = 10;
-    return str.replace(
-        new RegExp(`(.)\\1{${maxConsecutive - 1},}`, "g"),
-        (match, p1) => p1.repeat(maxConsecutive),
-    );
 }
 
 function hash(str) {
@@ -122,13 +114,6 @@ function formatDuration(seconds) {
     }
 }
 
-function minimizeWindow() {
-    // 最小化窗口
-    chrome.windows.getCurrent({ populate: false }, function (currentWindow) {
-        chrome.windows.update(currentWindow.id, { state: "minimized" });
-    });
-}
-
 function parseMetadata(str) {
     // 找到第一个 /* 开头的注释内容
     const commentRegex = /\/\*[^]*?\*\//;
@@ -209,6 +194,7 @@ function pickFile(accept, callback) {
 }
 
 function parseLrc(lrcText) {
+    // 解析 LRC 歌词
     const lines = lrcText.split('\n');
     const result = [];
 
