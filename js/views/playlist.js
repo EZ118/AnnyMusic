@@ -6,6 +6,7 @@ class PlaylistView {
 
     oninit() {
         this.playlistId = m.route.param("id");
+        this.playlists = {};
         this.loadPlaylists();
     }
 
@@ -13,7 +14,7 @@ class PlaylistView {
         // 页面切换时需要重新渲染
         if ((!this.playlistId && m.route.param("id")) || (this.playlistId && !m.route.param("id"))) {
             this.playlistId = m.route.param("id");
-            m.redraw();
+            this.loadPlaylists();
         }
     }
 
@@ -23,11 +24,23 @@ class PlaylistView {
     }
 
     createPlaylist() {
-        
+        const res = prompt("Enter a title for your new playlist.", "");
+        if (res.trim() && res.length < 150) {
+            this.playlists = {
+                ...this.playlists,
+                [ (new Date()).valueOf() ]: {
+                    "name": res,
+                    "list": []
+                }
+            }
+            
+            setStorageSync("playlists", this.playlists);
+            this.loadPlaylists();
+        }
     }
 
     playPlaylist(id) {
-        PlayerView.addToPlaylist(this.playlists[id].list);
+        PlayerView.addToQueue(this.playlists[id].list);
     }
 
     renamePlaylist(id){
@@ -56,11 +69,14 @@ class PlaylistView {
                     m("h1", "Playlists"),
                     m("p", "A small home for wandering thoughts.")
                 ]),
+                m("button.fab-btn", { onclick: () => this.createPlaylist() }, m.trust(ICON.add)),
                 m(".row",
                     Object.entries(this.playlists).map(([key, val]) => {
                         return m("div", { class: "playlist-card" }, [
                             m("img.cover", { src: "./img/default_cover.svg" }),
-                            m("h3.title", val.name),
+                            m("h3.title", {
+                                onclick: () => m.route.set("/playlist/" + key)
+                            }, val.name),
                             m("button.icon-btn", {
                                 title: "Play",
                                 onclick: () => this.playPlaylist(key)
@@ -89,8 +105,10 @@ class PlaylistView {
 
             return [
                 m(".banner-tint", [
-                    m("button.icon-btn", { onclick: () => m.route.set("/playlist") }, m.trust(ICON.arrowBack)),
-                    m("h1", this.playlists[this.playlistId].name),
+                    m("h1", [
+                        m("button.icon-btn", { onclick: () => m.route.set("/playlist") }, m.trust(ICON.arrowBack)),
+                        this.playlists[this.playlistId].name
+                    ]),
                     m.trust(ICON.playList)
                 ]),
                 m(".row", [

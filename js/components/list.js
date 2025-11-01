@@ -29,17 +29,17 @@ const MusicList = {
                                 }
                             }, m.trust(ICON.play)),
                             m("button", {
-                                title: "Add to favorites",
-                                class: "icon-btn",
-                                onclick: () => {
-                                    PlayerView.addToFavorites(item);
-                                }
-                            }, m.trust(ICON.star)),
-                            m("button", {
-                                title: "Add to current playlist",
+                                title: "Add to playlist",
                                 class: "icon-btn",
                                 onclick: () => {
                                     PlayerView.addToPlaylist(item);
+                                }
+                            }, m.trust(ICON.star)),
+                            m("button", {
+                                title: "Add to queue",
+                                class: "icon-btn",
+                                onclick: () => {
+                                    PlayerView.addToQueue(item);
                                 }
                             }, m.trust(ICON.add))
                         )

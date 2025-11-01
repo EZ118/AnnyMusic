@@ -32,16 +32,26 @@
     /* border-radius: 0 0 1.25em 1.25em; */
 }
 
-.banner-tint * {
+.banner-tint>* {
     margin: 5px;
     color: var(--s-color-primary);
+    position: relative;
+    z-index: 1;
 }
 
-.banner-tint svg {
+.banner-tint>h1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+}
+
+.banner-tint>svg {
     position: absolute;
     top: -50px;
     left: 10px;
-    z-index: 1;
+    z-index: 0;
     width: 150px;
     height: 150px;
     opacity: 0.1;
@@ -182,9 +192,9 @@
 }
 
 .search-source {
-    width:fit-content;
+    width: fit-content;
     margin: 5px 0;
-    background:transparent;
+    background: transparent;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -193,10 +203,10 @@
 }
 
 .search-source .item {
-    border:0;
-    height:24px;
+    border: 0;
+    height: 24px;
     width: 24px;
-    border-radius:50%;
+    border-radius: 50%;
     cursor: pointer;
     transition: all 0.1s;
 }
@@ -256,6 +266,63 @@
     border-top: 1px solid var(--s-color-surface-container);
     border: none;
     padding: 0px 5px;
+}
+
+/* 收藏列表页 */
+.playlist-card {
+    width: calc(50% - 20px);
+    min-width: 300px;
+    height: 60px;
+    border-radius: 12px;
+
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+
+    cursor: pointer;
+    padding: 5px;
+    margin: 10px;
+
+    transition: all 0.2s;
+    user-select: none;
+
+    flex-shrink: 0;
+    flex-grow: 0;
+    border: 1px solid transparent;
+}
+
+.playlist-card .cover {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+}
+
+.playlist-card .title {
+    flex: 1;
+    flex-grow: 1;
+    height:100%;
+    margin: 0 5px;
+    padding: calc(20px - 0.5em) 5px;
+    font-weight: bold;
+    font-size: 16px;
+    color: var(--s-color-on-surface);
+}
+
+.playlist-card button.icon-btn {
+    margin: 8px 3px;
+    color: var(--s-color-on-surface-variant);
+}
+
+.playlist-card:hover {
+    transform: scale(1.01);
+    background-color: var(--s-color-surface-container-high);
+}
+
+.playlist-card:active {
+    transform: scale(0.99);
+    background-color: var(--s-color-surface-container-highest);
+    border: 1px solid var(--s-color-surface-variant);
 }
 
 /* 设置页 */

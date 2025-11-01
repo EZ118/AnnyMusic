@@ -26,7 +26,9 @@ document.addEventListener('DOMContentLoaded', () => {
 		"/playlist/:id": PlaylistView,
         "/search": SearchView,
         "/settings": SettingsView
-    })
+    });
+
+	m.mount(document.querySelector("dialog"), Dialog);
 
     // PlayerView.play({
     //     src: "https://music.163.com/song/media/outer/url?id=138412.mp3",
