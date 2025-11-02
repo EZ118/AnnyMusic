@@ -104,12 +104,28 @@
             case 'wy':
                 return httpFetch(`https://music.163.com/api/song/lyric?id=${info.songmid}&os=pc&lv=-1&kv=-1&tv=-1&csrf_token=`)
                     .then((res) => {
-                        return res.body.lrc.lyric;
+                        if(!res.body.lrc.lyric) throw new Error("无歌词");
+                        return {
+                            lyric: res.body.lrc.lyric,
+                            tlyric: null,
+                            rlyric: null,
+                            lxlyric: null
+                        };
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             case 'tx':
                 return httpFetch(`https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?format=json&nobase64=1&songmid=${info.songmid}`)
                     .then((res) => {
-                        return res.body.lyric || Promise.reject("暂无歌词");
+                        if(!res.body.lyric)  throw new Error("无歌词");
+                        return {
+                            lyric: res.body.lyric,
+                            tlyric: null,
+                            rlyric: null,
+                            lxlyric: null
+                        };
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             case 'kw':
                 return httpFetch(`https://www.kuwo.cn/newh5/singles/songinfoandlrc?musicId=${info.songmid}&httpsStatus=1&plat=web_www&from=`)
@@ -126,7 +142,16 @@
 
                             lrcStr += `[${min}:${sec}] ${item.lineLyric}\n`;
                         });
-                        return lrcStr;
+
+                        if(!lrcStr) throw new Error("无歌词");
+                        return {
+                            lyric: lrcStr,
+                            tlyric: null,
+                            rlyric: null,
+                            lxlyric: null
+                        };
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             case 'kg':
                 return httpFetch(`http://krcs.kugou.com/search?ver=1&man=yes&client=mobi&hash=${info.hash}`)
@@ -136,8 +161,17 @@
                         return httpFetch(`https://lyrics.kugou.com/download?ver=1&client=pc&id=${lrcId}&accesskey=${lrcAccesskey}&fmt=lrc&charset=utf8`);
                     })
                     .then((res2) => {
-                        return decodeURIComponent(escape(atob(res2.body.content)));
-                    })
+                        const lrc = decodeURIComponent(escape(atob(res2.body.content)));
+                        if(!lrc) throw new Error("无歌词");
+                        return {
+                            lyric: lrc,
+                            tlyric: null,
+                            rlyric: null,
+                            lxlyric: null
+                        };
+                    }).catch(error => {
+                        return Promise.reject(error);
+                    });
             default:
                 return Promise.reject('不支持的源');
         }
@@ -170,7 +204,7 @@ function getLyricSource(key, callback) {
         action: 'lyric',
         info: { musicInfo: key }
     }).then((lrc) => {
-        callback(lrc);
+        callback(lrc.lyric);
     }).catch((error) => {
         console.error('[getMusicSource] 音乐歌词获取失败:', error);
         callback(null);

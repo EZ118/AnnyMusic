@@ -36,7 +36,7 @@ class SettingsView {
         const res = confirm("Are you sure to delete this music source?");
         if (res) {
             this.sourceList.splice(index, 1);
-            setStorageSync(this.sourceList);
+            setStorageSync("externalMusicSource", this.sourceList);
             m.redraw();
         }
     }
