@@ -313,6 +313,61 @@ footer .controls .controlBtn:active {
     opacity: 1;
 }
 
+dialog {
+    width: fit-content;
+    padding: 24px;
+    border-radius: 28px;
+    pointer-events: auto;
+    background:var(--s-color-surface-container-high);
+    color: var(--s-color-on-background);
+    box-shadow: 0 10px 14px -6px rgba(0, 0, 0, .2), 0 22px 35px 3px rgba(0, 0, 0, .14), 0 8px 42px 7px rgba(0, 0, 0, .12);
+    border:none;
+}
+
+.dialog-content { width:100%; height:fit-content; min-width: 350px; user-select: none; }
+.dialog-title { padding:0; margin:0 0 5px 0; font-size: 24px; }
+
+.dialog-body {
+    width: 100%;
+    margin: 10px 0px;
+    font-size: 16px;
+}
+
+dialog .playlist-list {
+    width:100%;
+    height:fit-content;
+    max-height: 500px;
+}
+
+dialog .playlist-item {
+    width:100%;
+    height:fit-content;
+    padding: 10px;
+    border:none;
+    cursor:pointer;
+}
+
+dialog .playlist-item:hover {
+    background: var(--s-color-surface-container-highest);
+}
+
+dialog .playlist-item:active {
+    background: var(--s-color-surface-container-highest);
+    filter: brightness(1.1);
+}
+
+dialog .dialog-footer {
+    width: 100%;
+    margin: 5px 0 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+}
+
+dialog input[type=checkbox] {
+    margin-right: 10px;
+}
 
 
 /* 控件 */
@@ -401,4 +456,41 @@ footer .controls .controlBtn:active {
 
 .icon-btn:active {
     background-color: var(--s-color-surface-container-highest);
+}
+
+
+/* 文本按钮 */
+.text-btn {
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    display: inline-flex;
+    vertical-align: middle;
+    border-radius: 20px;
+    padding: 0 24px;
+    height: 40px;
+    text-transform: capitalize;
+    position: relative;
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 500;
+    flex-shrink: 0;
+    white-space: nowrap;
+    background: none;
+    color: var(--s-color-primary);
+    transition: all .15s ease-out;
+    overflow: hidden;
+    border: none;
+    filter: brightness(100%);
+    margin: 1px 2px;
+}
+
+.text-btn:hover {
+    background: var(--s-color-secondary-container);
+    filter:brightness(0.8);
+}
+
+.text-btn:active {
+    background: var(--s-color-secondary-container);
+    filter:brightness(1);
 }

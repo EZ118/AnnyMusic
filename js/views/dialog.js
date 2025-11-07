@@ -148,24 +148,24 @@ const Dialog = {
                                 class: isSelected ? 'selected' : '',
                                 onclick: () => Dialog.togglePlaylist(playlistId)
                             }, [
-                                m('input[type=checkbox]', {
+                                m('input[type=checkbox]', { 
                                     checked: isSelected,
                                     onclick: (e) => {
                                         e.stopPropagation(); // 改用 onclick
                                     }
                                 }),
                                 m('span.playlist-name', playlist.name),
-                                m('span.playlist-count', `(${playlist.list.length}首)`)
+                                m('span.playlist-count', ` (${playlist.list.length}首)`)
                             ]);
                         })
                     )
             ]),
             
             m('div.dialog-footer', [
-                m('button.btn-cancel', {
+                m('button.text-btn', {
                     onclick: () => Dialog.cancel()
                 }, '取消'),
-                m('button.btn-confirm', {
+                m('button.text-btn', {
                     onclick: () => Dialog.confirm()
                 }, '确定')
             ])

@@ -30,6 +30,8 @@
                                 }
                             } catch { }
                         });
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             case 'tx':
                 return httpFetch("https://u.y.qq.com/cgi-bin/musicu.fcg", {
@@ -57,6 +59,8 @@
                                 };
                             } catch { }
                         });
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             case 'kw':
                 return httpFetch(`https://kuwo.cn/search/searchMusicBykeyWord?vipver=1&client=kt&ft=music&cluster=0&strategy=2012&encoding=utf8&rformat=json&mobi=1&issubtitle=1&show_copyright_off=1&pn=0&rn=40&all=${encodeURI(keyword)}`)
@@ -75,6 +79,8 @@
                                 };
                             } catch { }
                         });
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             case 'kg':
                 return httpFetch(`https://songsearch.kugou.com/song_search_v2?platform=WebFilter&format=json&page=1&pagesize=30&keyword=${encodeURI(keyword)}`)
@@ -93,6 +99,8 @@
                                 };
                             } catch { }
                         });
+                    }).catch(error => {
+                        return Promise.reject(error);
                     });
             default:
                 return Promise.reject('不支持的源');
