@@ -20,6 +20,8 @@ class SettingsView {
                 let metadata = parseMetadata(res);
                 if (!metadata.name) { alert("脚本元数据错误"); return; }
 
+                if (res.includes(`='jsjiami.com.v`)) { alert("暂不支持导入该脚本！脚本代码可能包含自卫模式，导致 AnnyMusic 崩溃。"); return; }
+
                 const userComfirm = confirm(`是否添加该脚本？ \n\n- 名称: ${metadata.name} \n- 作者: ${metadata.author}\n- 简介: ${metadata.description}`);
                 if (!userComfirm) { return; }
 

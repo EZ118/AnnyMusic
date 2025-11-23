@@ -13,14 +13,14 @@ const utils = {
          */
         aesEncrypt(buffer, mode, key, iv) {
             console.log('[LxApi.crypto.aesEncrypt]', buffer, mode, key, iv);
-
             try {
                 // 转换输入为 WordArray
                 const message = utils.crypto._toWordArray(buffer);
                 const keyWordArray = utils.crypto._toWordArray(key);
 
-                let encrypted;
+                console.log('🔍 原始消息长度(字节):', typeof buffer === 'string' ? buffer.length : buffer.length);
 
+                let encrypted;
                 switch (mode) {
                     case 'aes-128-cbc': {
                         const ivWordArray = utils.crypto._toWordArray(iv);
@@ -32,9 +32,10 @@ const utils = {
                         break;
                     }
                     case 'aes-128-ecb': {
+                        // ECB 模式必须使用 Pkcs7 padding，不能用 NoPadding
                         encrypted = CryptoJS.AES.encrypt(message, keyWordArray, {
                             mode: CryptoJS.mode.ECB,
-                            padding: CryptoJS.pad.NoPadding
+                            padding: CryptoJS.pad.Pkcs7  // 改为 Pkcs7
                         });
                         break;
                     }
@@ -42,8 +43,11 @@ const utils = {
                         throw new Error('Unsupported AES mode: ' + mode);
                 }
 
-                // 将加密结果转换为 Uint8Array
-                return utils.crypto._base64ToUint8Array(encrypted.ciphertext.toString(CryptoJS.enc.Base64));
+                // 将加密结果转换为 Base64 然后 Uint8Array
+                const base64Result = encrypted.ciphertext.toString(CryptoJS.enc.Base64);
+                const bytes = utils.crypto._base64ToUint8Array(base64Result);
+
+                return bytes;
             } catch (error) {
                 throw new Error('AES encryption failed: ' + error.message);
             }
@@ -279,7 +283,7 @@ const LxApi = {
         version: '0.0.1',
         author: 'EZ118',
         homepage: 'https://github.com/EZ118/',
-        rawScript: 'console.log("该音源执行了rawScript");'
+        rawScript: 'console.log("ERROR!!!!!!");'
     },
     EVENT_NAMES: {
         inited: 'inited',
@@ -296,12 +300,6 @@ const LxApi = {
     emit: async (eventName, payload) => {
         // 执行音源内部函数
         if (!eventHandlers[eventName]) return undefined;
-
-        // let result;
-        // for (const handler of eventHandlers[eventName]) {
-        //     result = await Promise.resolve(handler(payload));
-        // }
-        // return result;
 
         let failure = null;
         for (const handler of eventHandlers[eventName]) {
@@ -331,6 +329,9 @@ const LxApi = {
         if (eventName == LxApi.EVENT_NAMES.updateAlert) {
             alert(JSON.stringify(datas));
         }
+
+        // 记录该音源支持的源
+        console.log("[LxApi.send] supported sources: ", datas.sources)
     },
 
     request: (url, options, callback) => {

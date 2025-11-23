@@ -40,15 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sandBox: true,
         });
 
-		const boundSetTimeout = window.setTimeout.bind(window);
-		const boundSetInterval = window.setInterval.bind(window);
-        
-        interpreter.import({
+		interpreter.import({
 			lx: {...LxApi, currentScriptInfo: item},
-			setTimeout: boundSetTimeout,
-			setInterval: boundSetInterval,
+			setTimeout: window.setTimeout.bind(window),
+			setInterval: window.setInterval.bind(window)
 		});
-        interpreter.run(item.rawScript);
+		interpreter.run(item.rawScript);
     });
 
 	/* 恢复console */
