@@ -54,7 +54,7 @@ class SettingsView {
                     class: "fab-btn",
                     title: "保存更改",
                     onclick: () => {
-                        alert("未保存，功能未开发");
+                        toast("未保存，功能未开发");
                     }
                 },
                 m.trust(ICON.save)

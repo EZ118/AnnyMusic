@@ -413,6 +413,7 @@ const PlayerView = {
         if (PlayerView.currentInfo.source === currentSong.source &&
             PlayerView.currentInfo.songmid === currentSong.songmid) {
             console.log('歌曲已在播放中');
+            toast("歌曲已在播放中");
             return;
         }
 
@@ -424,12 +425,14 @@ const PlayerView = {
 
         if (existsInQueue) {
             console.log('歌曲已在播放队列中');
+            toast("歌曲已在播放队列中");
             return;
         }
 
         // 添加到队列末尾
         PlayerView.songQueue.push(currentSong);
         console.log('已添加到播放队列:', PlayerView.songQueue);
+        toast("已添加到播放队列");
     }
 }
 

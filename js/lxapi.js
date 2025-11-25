@@ -18,8 +18,6 @@ const utils = {
                 const message = utils.crypto._toWordArray(buffer);
                 const keyWordArray = utils.crypto._toWordArray(key);
 
-                console.log('🔍 原始消息长度(字节):', typeof buffer === 'string' ? buffer.length : buffer.length);
-
                 let encrypted;
                 switch (mode) {
                     case 'aes-128-cbc': {

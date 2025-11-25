@@ -44,7 +44,7 @@ class PlaylistView {
     }
 
     renamePlaylist(id){
-        const res = prompt("Enter the new title for your playlist.", this.playlists[id].name);
+        const res = prompt("Enter a new title for your playlist.", this.playlists[id].name);
         if(res) {
             this.playlists[id].name = res;
             setStorageSync("playlists", this.playlists);

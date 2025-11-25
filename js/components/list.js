@@ -10,7 +10,7 @@ const MusicList = {
                     m("th", { style: { width: "auto", minWidth: "100px" } }, "Name"),
                     m("th", { style: { width: "20%", minWidth: "50px" } }, "Artist"),
                     m("th", { style: { width: "20%", minWidth: "50px" } }, "Album"),
-                    m("th", { style: { width: "145px" } }, " Actions")
+                    m("th", { style: { width: "175px" } }, " Actions")
                 ])
             ]),
             m("tbody",
@@ -24,24 +24,23 @@ const MusicList = {
                             m("button", {
                                 title: "Play now",
                                 class: "icon-btn",
-                                onclick: () => {
-                                    PlayerView.play(item);
-                                }
+                                onclick: () => PlayerView.play(item)
                             }, m.trust(ICON.play)),
                             m("button", {
                                 title: "Add to playlist",
                                 class: "icon-btn",
-                                onclick: () => {
-                                    PlayerView.addToPlaylist(item);
-                                }
+                                onclick: () => PlayerView.addToPlaylist(item)
                             }, m.trust(ICON.star)),
                             m("button", {
                                 title: "Add to queue",
                                 class: "icon-btn",
-                                onclick: () => {
-                                    PlayerView.addToQueue(item);
-                                }
-                            }, m.trust(ICON.add))
+                                onclick: () => PlayerView.addToQueue(item)
+                            }, m.trust(ICON.add)),
+                            m("button", {
+                                title: "Show detail",
+                                class: "icon-btn",
+                                onclick: () => Dialog.show("showMusicInfo", item)
+                            }, m.trust(ICON.info))
                         )
                     ]);
                 })

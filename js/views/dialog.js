@@ -7,23 +7,23 @@ const Dialog = {
         Dialog.selectedPlaylists = new Set(); // 存储用户选择的播放列表ID
         Dialog.currentSong = null; // 当前歌曲信息
     },
-    
+
     show(mode, options = {}) {
         Dialog.submitFlag = 0;
         Dialog.mode = mode;
         Dialog.options = options;
-        
+
         // 如果是添加到播放列表模式，初始化选中状态
         if (mode === "addToPlaylist") {
             Dialog.currentSong = options.currentSong || {};
             Dialog.selectedPlaylists = new Set();
-            
+
             // 查找当前歌曲已在哪些播放列表中
             if (options.playlists && Dialog.currentSong.source && Dialog.currentSong.songmid) {
                 Object.keys(options.playlists).forEach(playlistId => {
                     const playlist = options.playlists[playlistId];
-                    const exists = playlist.list.some(song => 
-                        song.source === Dialog.currentSong.source && 
+                    const exists = playlist.list.some(song =>
+                        song.source === Dialog.currentSong.source &&
                         song.songmid === Dialog.currentSong.songmid
                     );
                     if (exists) {
@@ -31,15 +31,17 @@ const Dialog = {
                     }
                 });
             }
+        } else if (mode === "showMusicInfo") {
+
         }
-        
+
         Dialog.ele.showModal();
         m.redraw();
-        
+
         return new Promise((resolve, reject) => {
             const closeHandler = () => {
                 Dialog.ele.removeEventListener("close", closeHandler);
-                
+
                 if (Dialog.submitFlag === 1) {
                     // 用户确认提交
                     if (Dialog.mode === "addToPlaylist") {
@@ -57,30 +59,30 @@ const Dialog = {
                         reject(Dialog.ele.returnValue);
                     }
                 }
-                
+
                 Dialog.mode = "";
                 Dialog.options = {};
                 m.redraw();
             };
-            
+
             Dialog.ele.addEventListener("close", closeHandler);
         });
     },
-    
+
     // 获取更新后的播放列表
     _getUpdatedPlaylists() {
         const playlists = JSON.parse(JSON.stringify(Dialog.options.playlists || {}));
         const currentSong = Dialog.currentSong;
-        
+
         Object.keys(playlists).forEach(playlistId => {
             const playlist = playlists[playlistId];
-            const existingIndex = playlist.list.findIndex(song => 
-                song.source === currentSong.source && 
+            const existingIndex = playlist.list.findIndex(song =>
+                song.source === currentSong.source &&
                 song.songmid === currentSong.songmid
             );
-            
+
             const shouldExist = Dialog.selectedPlaylists.has(playlistId);
-            
+
             if (shouldExist && existingIndex === -1) {
                 // 需要添加但不存在，添加歌曲
                 playlist.list.push(currentSong);
@@ -89,10 +91,10 @@ const Dialog = {
                 playlist.list.splice(existingIndex, 1);
             }
         });
-        
+
         return playlists;
     },
-    
+
     // 切换播放列表选中状态
     togglePlaylist(playlistId) {
         if (Dialog.selectedPlaylists.has(playlistId)) {
@@ -102,53 +104,87 @@ const Dialog = {
         }
         m.redraw();
     },
-    
+
     // 确认提交
     confirm() {
         Dialog.submitFlag = 1;
         Dialog.ele.close("confirmed");
     },
-    
+
     // 取消
     cancel() {
         Dialog.submitFlag = 2;
         Dialog.ele.close();
     },
-    
+
     view(vnode) {
         if (!Dialog.mode) return [];
-        
+
         // 关键修改：返回 dialog 元素并包含内容
         return Dialog._renderContent();
     },
-    
+
     _renderContent() {
         if (Dialog.mode === "addToPlaylist") {
             return Dialog._renderAddToPlaylist();
+        } else if (Dialog.mode === "showMusicInfo") {
+            return Dialog._renderMusicInfo();
         }
         return m('div', '未知的对话框模式');
     },
-    
+
+    _renderMusicInfo() {
+        return m('div.dialog-content', [
+            m('h2.dialog-title', '信息'),
+
+            m('div.dialog-body', { style: "user-select:text;" }, [
+                m('div.playlist-item', [
+                    m('b.playlist-name', "名  称: "), Dialog.options.name
+                ]),
+                m('div.playlist-item', [
+                    m('b.playlist-name', "艺  人: "), Dialog.options.singer
+                ]),
+                m('div.playlist-item', [
+                    m('b.playlist-name', "专  辑: "), Dialog.options.albumName
+                ]),
+                m('div.playlist-item', [
+                    m('b.playlist-name', "来  源: "), Dialog.options.source
+                ]),
+                m('div.playlist-item', [
+                    m('b.playlist-name', "专辑ID: "), Dialog.options.albumId
+                ]),
+                m('div.playlist-item', [
+                    m('b.playlist-name', "歌曲ID: "), Dialog.options.songmid
+                ])
+            ]),
+            m('div.dialog-footer', [
+                m('button.text-btn', {
+                    onclick: () => Dialog.confirm()
+                }, '关闭')
+            ])
+        ]);
+    },
+
     _renderAddToPlaylist() {
         const playlists = Dialog.options.playlists || {};
         const playlistIds = Object.keys(playlists);
-        
+
         return m('div.dialog-content', [
             m('h2.dialog-title', '添加到播放列表'),
-            
+
             m('div.dialog-body', [
-                playlistIds.length === 0 
+                playlistIds.length === 0
                     ? m('p.empty-message', '暂无播放列表')
-                    : m('div.playlist-list', 
+                    : m('div.playlist-list',
                         playlistIds.map(playlistId => {
                             const playlist = playlists[playlistId];
                             const isSelected = Dialog.selectedPlaylists.has(playlistId);
-                            
+
                             return m('div.playlist-item', {
                                 class: isSelected ? 'selected' : '',
                                 onclick: () => Dialog.togglePlaylist(playlistId)
                             }, [
-                                m('input[type=checkbox]', { 
+                                m('input[type=checkbox]', {
                                     checked: isSelected,
                                     onclick: (e) => {
                                         e.stopPropagation(); // 改用 onclick
@@ -160,7 +196,7 @@ const Dialog = {
                         })
                     )
             ]),
-            
+
             m('div.dialog-footer', [
                 m('button.text-btn', {
                     onclick: () => Dialog.cancel()

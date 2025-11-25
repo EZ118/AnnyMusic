@@ -7,6 +7,18 @@ function toggleLoader(show) {
     }
 }
 
+function toast(content, delay){
+    delay = delay || 3000;
+    let div = document.createElement('div');
+    div.className = 'toast';
+    div.innerText = content;
+    document.body.appendChild(div);
+
+    setTimeout(() => {
+        div.remove();
+    }, delay);
+}
+
 function hash(str) {
     // 计算字符串的哈希值（返回字符串）
     let hash = 5381;
