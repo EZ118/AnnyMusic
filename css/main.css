@@ -198,12 +198,29 @@ footer .controls {
 }
 
 footer .controls .left {
-    width: 55px;
+    width: calc((100% - 225px) / 2 - 30px);
     height: 55px;
     margin: 10px;
-    margin-right: 20px;
-    border-radius: 10px;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 6px;
+}
+
+footer .controls .left .cover {
+    width: 55px;
+    height: 55px;
+    border-radius: 10px;
+}
+
+footer .controls .left .title {
+    max-width: calc(100% - 75px);
+    max-height: 100%;
+    margin:0;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 footer .controls .center {
@@ -217,11 +234,9 @@ footer .controls .center {
 }
 
 footer .controls .right {
-    width: fit-content;
-    min-width: 75px;
-    max-width: 100px;
+    width: calc((100% - 225px) / 2 - 30px);
     height: 75px;
-    padding: 2px 3px;
+    padding: 6px 10px;
     margin: 0px;
     color: var(--s-color-on-surface-variant);
     opacity: 0.6;

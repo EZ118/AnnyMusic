@@ -33,6 +33,8 @@ const Dialog = {
             }
         } else if (mode === "showMusicInfo") {
 
+        } else if (mode === "showPlayQueue") {
+
         }
 
         Dialog.ele.showModal();
@@ -129,8 +131,38 @@ const Dialog = {
             return Dialog._renderAddToPlaylist();
         } else if (Dialog.mode === "showMusicInfo") {
             return Dialog._renderMusicInfo();
+        } else if (Dialog.mode === "showPlayQueue") {
+            return Dialog._renderPlayQueue();
         }
         return m('div', '未知的对话框模式');
+    },
+
+    _renderPlayQueue() {
+        return m('div.dialog-content', [
+            m('h2.dialog-title', '播放队列'),
+
+            m('div.dialog-body', 
+                Dialog.options.list.map((item) => {
+                    return m('div.playlist-item', { onclick: () => PlayerView.play(item, true) }, [
+                        m('b.playlist-name', item.name), " - ", item.singer
+                    ])
+                })
+            ),
+            m('div.dialog-footer', [
+                m('button.text-btn', {
+                    onclick: () => {
+                        if (confirm("Clear the queue?")) {
+                            PlayerView.addToQueue([]);
+                            Dialog.options.list = [];
+                            m.redraw();
+                        }
+                    }
+                }, '清空'),
+                m('button.text-btn', {
+                    onclick: () => Dialog.confirm()
+                }, '隐藏')
+            ])
+        ]);
     },
 
     _renderMusicInfo() {

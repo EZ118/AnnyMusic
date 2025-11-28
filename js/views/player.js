@@ -201,6 +201,10 @@ const PlayerView = {
         LyricView.toggle(PlayerView.currentInfo);
     },
 
+    togglePlayQueue() {
+        Dialog.show("showPlayQueue", { list: PlayerView.songQueue });
+    },
+
     play(musicInfo, fromQueueControl = false) {
         // 处理播放队列逻辑（仅当不是从队列控制调用时）
         if (musicInfo && !fromQueueControl) {
@@ -367,13 +371,23 @@ const PlayerView = {
             ),
 
             m('.controls',
-                m('img', { src: PlayerView.currentInfo.img, title: PlayerView.currentInfo.title, class: "left", onclick: PlayerView.toggleFullscreen, onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
-                m('.center', [
-                    m(".controlBtn", { onclick: () => { PlayerView.prevSong() } }, m.trust(ICON.prevSong)),
-                    m(".controlBtn", { onclick: () => { PlayerView.audio.paused ? PlayerView.audio.play() : PlayerView.audio.pause(); } }, PlayerView.audio.paused ? m.trust(ICON.play) : m.trust(ICON.pause)),
-                    m(".controlBtn", { onclick: () => { PlayerView.nextSong() } }, m.trust(ICON.nextSong))
+                m('.left', { onclick: PlayerView.toggleFullscreen, title: PlayerView.currentInfo.title }, [
+                    m('img.cover', { src: PlayerView.currentInfo.img, onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
+                    m('p.title', [
+                        PlayerView.currentInfo.name,
+                        m('font', { size:2, color:"#88888888", style: "display:block" }, PlayerView.currentInfo.singer)
+                    ]),
                 ]),
-                m('.right', `${formatDuration(PlayerView.currentTime) || "00:00"}/${formatDuration(PlayerView.duration)}`)
+                m('.center', [
+                    m('.controlBtn', { onclick: () => { PlayerView.prevSong() } }, m.trust(ICON.prevSong)),
+                    m('.controlBtn', { onclick: () => { PlayerView.audio.paused ? PlayerView.audio.play() : PlayerView.audio.pause(); } }, PlayerView.audio.paused ? m.trust(ICON.play) : m.trust(ICON.pause)),
+                    m('.controlBtn', { onclick: () => { PlayerView.nextSong() } }, m.trust(ICON.nextSong))
+                ]),
+                m('.right', [
+                    m('.duration', `${formatDuration(PlayerView.currentTime) || "00:00"}/${formatDuration(PlayerView.duration)}`),
+                    m('.icon-btn', { onclick: () => PlayerView.addToPlaylist(PlayerView.currentInfo) }, m.trust(ICON.star)),
+                    m('.icon-btn', { onclick: () => PlayerView.togglePlayQueue() }, m.trust(ICON.playList))
+                ])
             )
         ]
     },
@@ -383,6 +397,7 @@ const PlayerView = {
 
     // external functions
     addToPlaylist(currentSong) {
+        if (!PlayerView.currentInfo.songmid) { return; }
         Dialog.show("addToPlaylist", {
             playlists: getStorageSync("playlists") || {},
             currentSong: currentSong
