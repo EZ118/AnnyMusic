@@ -73,7 +73,10 @@ class PlaylistView {
                 m(".row",
                     Object.entries(this.playlists).map(([key, val]) => {
                         return m("div", { class: "playlist-card" }, [
-                            m("img.cover", { src: "./img/default_cover.svg" }),
+                            m("img.cover", {
+                                onclick: () => m.route.set("/playlist/" + key),
+                                src: "./img/default_cover.svg"
+                            }),
                             m("h3.title", {
                                 onclick: () => m.route.set("/playlist/" + key)
                             }, val.name),

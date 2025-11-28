@@ -141,17 +141,31 @@ const Dialog = {
         return m('div.dialog-content', [
             m('h2.dialog-title', '播放队列'),
 
-            m('div.dialog-body', 
-                Dialog.options.list.map((item) => {
-                    return m('div.playlist-item', { onclick: () => PlayerView.play(item, true) }, [
-                        m('b.playlist-name', item.name), " - ", item.singer
-                    ])
+            m('div.dialog-body',
+                Dialog.options.list.map((item, index) => {
+                    return m('div.playlist-item',
+                        {
+                            onclick: () => PlayerView.play(item, true),
+                            oncontextmenu: (event) => {
+                                // 从队列删除项目
+                                event.preventDefault();
+                                if(confirm("Remove from queue?")) {
+                                    Dialog.options.list.splice(index, 1);
+                                    m.redraw();
+                                }
+                            }
+                        },
+                        [
+                            m('b.playlist-name', item.name), " - ", item.singer
+                        ]
+                    )
                 })
             ),
             m('div.dialog-footer', [
                 m('button.text-btn', {
                     onclick: () => {
                         if (confirm("Clear the queue?")) {
+                            // 清空队列
                             PlayerView.addToQueue([]);
                             Dialog.options.list = [];
                             m.redraw();
@@ -159,7 +173,11 @@ const Dialog = {
                     }
                 }, '清空'),
                 m('button.text-btn', {
-                    onclick: () => Dialog.confirm()
+                    onclick: () => {
+                        // 保存队列
+                        PlayerView.songQueue = Dialog.options.list;
+                        Dialog.confirm();
+                    }
                 }, '隐藏')
             ])
         ]);
@@ -219,7 +237,7 @@ const Dialog = {
                                 m('input[type=checkbox]', {
                                     checked: isSelected,
                                     onclick: (e) => {
-                                        e.stopPropagation(); // 改用 onclick
+                                        e.stopPropagation();
                                     }
                                 }),
                                 m('span.playlist-name', playlist.name),

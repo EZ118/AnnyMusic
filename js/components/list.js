@@ -17,7 +17,7 @@ const MusicList = {
                 listItems.map((item, index) => {
                     return m("tr", [
                         m("td", index + 1),
-                        m("td", item.name),
+                        m("td", { ondblclick: () => PlayerView.play(item) }, item.name),
                         m("td", item.singer),
                         m("td", item.albumName),
                         m("td",
