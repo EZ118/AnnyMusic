@@ -13,7 +13,7 @@ class NavView {
         // 获取当前选中项
         setTimeout(() => {
             this.selected = m.route.get() || "/home";
-            console.log(this.selected)
+            // console.log(this.selected)
             m.redraw();
         }, 100);
     }

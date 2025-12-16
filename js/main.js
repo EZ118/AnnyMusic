@@ -4,13 +4,6 @@ import PlaylistView from "./views/playlist.js";
 import SearchView from "./views/search.js";
 import SettingsView from "./views/settings.js";
 
-document.addEventListener('touchstart', function (event) {
-    // 禁止缩放
-    if (event.touches.length > 1) {
-        event.preventDefault();
-    }
-}, { passive: false });
-
 document.addEventListener('DOMContentLoaded', () => {
     /* 渲染导航栏 */
     m.mount(document.querySelector("nav"), NavView);
@@ -34,21 +27,25 @@ document.addEventListener('DOMContentLoaded', () => {
 	/* 执行播放源 */
 	const externalMusicSource = getStorageSync("externalMusicSource") || [];
     externalMusicSource.forEach(item => {
+		// 初始化沙盒
         const interpreter = new Sval({
             ecmaVer: 'latest',
             sourceType: 'script',
             sandBox: true,
         });
 
+		// 将 lx_music 兼容API引入
 		interpreter.import({
 			lx: {...LxApi, currentScriptInfo: item},
 			setTimeout: window.setTimeout.bind(window),
 			setInterval: window.setInterval.bind(window)
 		});
+
+		// 执行当前沙盒
 		interpreter.run(item.rawScript);
     });
 
-	/* 恢复console */
+	/* 恢复控制台输出 */
 	setTimeout(() => {
 		const iframe = document.createElement('iframe');
 		iframe.style.display = 'none';
@@ -80,6 +77,13 @@ document.addEventListener('DOMContentLoaded', () => {
 			dirxml: originalConsole.dirxml.bind(originalConsole)
 		};
 		
-		console.log('✅ Console 已恢复！');
+		console.log('[main.init] Console recovered.');
 	}, 500);
 });
+
+document.addEventListener('touchstart', function (event) {
+    // 禁止通过触摸缩放页面
+    if (event.touches.length > 1) {
+        event.preventDefault();
+    }
+}, { passive: false });

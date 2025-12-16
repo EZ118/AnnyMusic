@@ -1,6 +1,8 @@
 const eventHandlers = {};
 const sourceLists = {};
 
+const cacheMgr = new CacheManager();
+
 const utils = {
     crypto: {
         /**
@@ -135,7 +137,7 @@ const utils = {
 
         // 辅助方法: 转换为 CryptoJS WordArray
         _toWordArray(input) {
-            console.log('[LxApi.crypto._toWordArray]', input);
+            // console.log('[LxApi.crypto._toWordArray]', input);
 
             if (typeof input === 'string') {
                 return CryptoJS.enc.Utf8.parse(input);
@@ -151,7 +153,7 @@ const utils = {
 
         // 辅助方法: Base64 转 Uint8Array
         _base64ToUint8Array(base64) {
-            console.log('[LxApi.crypto._base64ToUint8Array]', base64);
+            // console.log('[LxApi.crypto._base64ToUint8Array]', base64);
 
             const binaryString = atob(base64);
             const len = binaryString.length;
@@ -171,7 +173,6 @@ const utils = {
          * @returns {Uint8Array} 字节数组
          */
         from(input, encoding) {
-
             console.log('[LxApi.buffer.from]', input, encoding);
 
             if (typeof input === 'string') {
@@ -281,7 +282,7 @@ const LxApi = {
         version: '0.0.1',
         author: 'EZ118',
         homepage: 'https://github.com/EZ118/',
-        rawScript: 'console.log("ERROR!!!!!!");'
+        rawScript: 'console.error("[LxApi.currentScriptInfo] Error executing music source script!");'
     },
     EVENT_NAMES: {
         inited: 'inited',
@@ -329,7 +330,7 @@ const LxApi = {
         }
 
         // 记录该音源支持的源
-        console.log("[LxApi.send] supported sources: ", datas.sources)
+        console.log("[LxApi.send] Supported sources:", datas.sources)
     },
 
     request: (url, options, callback) => {
@@ -362,6 +363,7 @@ const LxApi = {
             }
         }
 
+        // 处理 JSON 格式的 form 数据
         if (options.formData) {
             if (typeof options.formData === 'object') {
                 fetchOptions.body = JSON.stringify(options.formData);
@@ -373,8 +375,13 @@ const LxApi = {
             }
         }
 
+        // 读取缓存
+        const cache = cacheMgr.getRequestCache(url + fetchOptions.body);
+        if (cache) { callback(null, cache); toggleLoader(false); return; }
+
         fetch(url, fetchOptions)
             .then(async resp => {
+                // 检查响应是否有效
                 let text;
                 try {
                     text = await resp.text();
@@ -383,6 +390,7 @@ const LxApi = {
                     return;
                 }
 
+                // 处理响应结果，自动转换 JSON
                 let parsedBody;
                 try {
                     parsedBody = JSON.parse(text);
@@ -390,19 +398,27 @@ const LxApi = {
                     parsedBody = text;
                 }
 
+                // 返回响应结果（lx_music格式）
                 callback(null, {
                     statusCode: resp.status,
                     headers: Object.fromEntries(resp.headers.entries()),
                     body: parsedBody,
                 });
                 toggleLoader(false);
+
+                // 写入缓存
+                cacheMgr.addToRequestCache(url + fetchOptions.body, {
+                    statusCode: resp.status,
+                    headers: Object.fromEntries(resp.headers.entries()),
+                    body: parsedBody,
+                })
             })
             .catch(err => {
+                // 请求错误
                 callback(err, undefined);
                 toggleLoader(false);
             });
-
-        return () => console.warn('取消请求未实现');
+        return () => console.warn('[LxApi.request] Canceling requests is not supported');
     },
     utils
 };

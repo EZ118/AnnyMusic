@@ -61,7 +61,7 @@ const LyricView = {
             LyricView.show(true);
 
             // 载入歌词
-            if (LyricView.currentInfo != info || LyricView.lyric.length <= 2) {
+            if (LyricView.currentInfo != info || LyricView.lyric.length < 2) {
                 LyricView.currentInfo = info;
                 LyricView.lyric = [
                     { time: 0, text: "加载中..." }
@@ -98,7 +98,6 @@ const LyricView = {
 
                 if (!LyricView.lyric || LyricView.lyric.length === 0) return;
 
-                let currentLineIndex = 0;
                 for (let i = LyricView.lyric.length - 1; i >= 0; i--) {
                     if (LyricView.lyric[i].time <= currentTime + 0.7) {
                         if (i != LyricView.currentLrcLine) {
@@ -181,7 +180,7 @@ const PlayerView = {
         }, 1000);
 
         PlayerView.audio.addEventListener('ended', () => {
-            console.log("自动播放下一首歌曲")
+            console.log("[PlayerView] Switched to next song automatically.")
             PlayerView.nextSong();
         });
     },
@@ -218,7 +217,7 @@ const PlayerView = {
                 PlayerView.audio.currentTime = 0;
                 PlayerView.currentTime = 0;
                 PlayerView.audio.play();
-                console.log('[PlayerView.play] 重新播放当前歌曲');
+                console.log('[PlayerView.play] The song starts playing from the beginning.');
                 m.redraw();
                 return;
             }
@@ -236,7 +235,7 @@ const PlayerView = {
                     ...PlayerView.songQueue.slice(queueIndex),
                     ...PlayerView.songQueue.slice(0, queueIndex)
                 ];
-                console.log('[PlayerView.play] 从队列中的歌曲开始播放');
+                console.log('[PlayerView.play] Music starts playing from the beginning of the queue.');
             } else {
                 // 歌曲不在队列中，插入到当前播放位置
                 if (PlayerView.currentInfo.songmid) {
@@ -257,7 +256,7 @@ const PlayerView = {
                     // 没有正在播放的歌曲，插入到队列开头
                     PlayerView.songQueue.unshift(musicInfo);
                 }
-                console.log('[PlayerView.play] 歌曲已添加到队列');
+                console.log('[PlayerView.play] The song has been added to the queue.');
             }
         }
 
@@ -285,16 +284,16 @@ const PlayerView = {
             // 播放
             PlayerView.audio.play()
                 .then(() => {
-                    console.log('[PlayerView.play] Audio loaded, music starts to play:', PlayerView.audio.src);
+                    console.log('[PlayerView.play] Audio loaded:', PlayerView.audio.src);
                     m.redraw(); // 刷新DOM，更新信息如封面、进度、按钮图标
                 })
                 .catch(err => {
-                    console.error('[PlayerView.play]', err);
+                    console.error('[PlayerView.play] Error loading:', err);
                 });
 
             // 获取音频时长
             PlayerView.audio.addEventListener('loadedmetadata', () => {
-                console.log('[PlayerView.play] Metadata loaded, music duration', PlayerView.audio.duration);
+                console.log('[PlayerView.play] Metadata loaded.');
                 PlayerView.currentTime = 0;
                 PlayerView.duration = PlayerView.audio.duration;
             });
@@ -310,7 +309,7 @@ const PlayerView = {
 
     prevSong() {
         if (PlayerView.songQueue.length === 0) {
-            console.log('[PlayerView.prevSong] 播放队列为空');
+            console.log('[PlayerView.prevSong] Empty queue.');
             return;
         }
 
@@ -333,12 +332,12 @@ const PlayerView = {
         }
 
         PlayerView.play(prevSong, true);
-        console.log('[PlayerView.prevSong] 播放上一首');
+        console.log('[PlayerView.prevSong] Start playing the previous song.');
     },
 
     nextSong() {
         if (PlayerView.songQueue.length === 0) {
-            console.log('[PlayerView.nextSong] 播放队列为空');
+            console.log('[PlayerView.nextSong] Empty queue.');
             return;
         }
 
@@ -361,7 +360,7 @@ const PlayerView = {
         }
 
         PlayerView.play(nextSong, true);
-        console.log('[PlayerView.nextSong] 播放下一首');
+        console.log('[PlayerView.nextSong] Start playing the next song.');
     },
 
     view(vnode) {
@@ -414,7 +413,7 @@ const PlayerView = {
         if (Array.isArray(currentSong)) {
             // 替换整个播放队列
             PlayerView.songQueue = [...currentSong];
-            console.log('已替换播放队列:', PlayerView.songQueue);
+            console.log('[PlayerView.addToQueue] The queue is replaced with:', PlayerView.songQueue);
 
             // 从第一首开始播放
             if (PlayerView.songQueue.length > 0) {
@@ -427,7 +426,6 @@ const PlayerView = {
         // 检查是否是当前正在播放的歌曲
         if (PlayerView.currentInfo.source === currentSong.source &&
             PlayerView.currentInfo.songmid === currentSong.songmid) {
-            console.log('歌曲已在播放中');
             toast("歌曲已在播放中");
             return;
         }
@@ -439,14 +437,13 @@ const PlayerView = {
         );
 
         if (existsInQueue) {
-            console.log('歌曲已在播放队列中');
             toast("歌曲已在播放队列中");
             return;
         }
 
         // 添加到队列末尾
         PlayerView.songQueue.push(currentSong);
-        console.log('已添加到播放队列:', PlayerView.songQueue);
+        console.log('[PlayerView.addToQueue] The song is added to the queue:', PlayerView.songQueue);
         toast("已添加到播放队列");
     }
 }
