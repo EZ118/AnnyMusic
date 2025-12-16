@@ -15,10 +15,10 @@ class SettingsView {
             reader.readAsText(file, "text");
             reader.onload = (e) => {
                 const res = e.target.result;
-                if (!res) { alert("脚本不存在！"); return; }
+                if (!res) { toast("脚本不存在！"); return; }
 
                 let metadata = parseMetadata(res);
-                if (!metadata.name) { alert("脚本元数据错误"); return; }
+                if (!metadata.name) { toast("脚本元数据错误"); return; }
 
                 if (res.includes(`='jsjiami.com.v`)) { alert("暂不支持导入该脚本！脚本代码可能包含自卫模式，导致 AnnyMusic 崩溃。"); return; }
 
@@ -28,7 +28,7 @@ class SettingsView {
                 metadata["rawScript"] = res;
                 this.sourceList.push(metadata);
                 setStorageSync("externalMusicSource", this.sourceList);
-                alert("已添加，下次加载时生效");
+                toast("已添加，下次加载时生效");
                 m.redraw();
             }
         });

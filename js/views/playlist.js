@@ -71,7 +71,7 @@ class PlaylistView {
                 ]),
                 m("button.fab-btn", { onclick: () => this.createPlaylist() }, m.trust(ICON.add)),
                 m(".row",
-                    Object.entries(this.playlists).map(([key, val]) => {
+                    Object.keys(this.playlists).length ? Object.entries(this.playlists).map(([key, val]) => {
                         return m("div", { class: "playlist-card" }, [
                             m("img.cover", {
                                 onclick: () => m.route.set("/playlist/" + key),
@@ -93,7 +93,7 @@ class PlaylistView {
                                 onclick: () => this.deletePlaylist(key)
                             }, m.trust(ICON.delete))
                         ])
-                    })
+                    }) : m("h2.tiptext-onblank", "点击“+”以新增列表")
                 )
             ]
         } else {

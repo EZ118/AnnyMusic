@@ -396,7 +396,7 @@ const PlayerView = {
 
     // external functions
     addToPlaylist(currentSong) {
-        if (!PlayerView.currentInfo.songmid) { return; }
+        if (!currentSong.songmid) { return; }
         Dialog.show("addToPlaylist", {
             playlists: getStorageSync("playlists") || {},
             currentSong: currentSong

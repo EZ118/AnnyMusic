@@ -8,7 +8,7 @@ function toggleLoader(show) {
 }
 
 function toast(content, delay){
-    delay = delay || 3000;
+    delay = delay || 4000;
     let div = document.createElement('div');
     div.className = 'toast';
     div.innerText = content;

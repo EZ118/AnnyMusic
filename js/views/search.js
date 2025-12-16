@@ -93,7 +93,7 @@ class SearchView {
                 this.searchResults.length ? [
                     m(MusicList, { data: this.searchResults })
                 ] : [
-                    m("h2", "搜我所想~~ 😉 ")
+                    m("h2.tiptext-onblank", "~ 搜我所想 ~")
                 ]
             ])
         ];

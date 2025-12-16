@@ -5,18 +5,18 @@ const MusicList = {
 
         return m("table.music-list", [
             m("thead", [
-                m("tr", [
-                    m("th", { style: { width: "42px" } }, "#"),
+                m("tr", { height: "40px" }, [
+                    m("th", { style: { width: "42px" }, align: "right" }, "#"),
                     m("th", { style: { width: "auto", minWidth: "100px" } }, "Name"),
                     m("th", { style: { width: "20%", minWidth: "50px" } }, "Artist"),
                     m("th", { style: { width: "20%", minWidth: "50px" } }, "Album"),
-                    m("th", { style: { width: "175px" } }, " Actions")
+                    m("th", { style: { width: "185px" } }, m.trust("&nbsp;&nbsp;&nbsp;Actions"))
                 ])
             ]),
             m("tbody",
                 listItems.map((item, index) => {
                     return m("tr", [
-                        m("td", index + 1),
+                        m("td", { align: "right"}, index + 1),
                         m("td", { ondblclick: () => PlayerView.play(item) }, item.name),
                         m("td", item.singer),
                         m("td", item.albumName),
