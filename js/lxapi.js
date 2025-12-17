@@ -1,8 +1,6 @@
 const eventHandlers = {};
 const sourceLists = {};
 
-const cacheMgr = new CacheManager();
-
 const utils = {
     crypto: {
         /**

@@ -19,11 +19,13 @@ class PlaylistView {
     }
 
     loadPlaylists() {
+        // 加载所有播放列表
         this.playlists = getStorageSync("playlists") || {};
         m.redraw();
     }
 
     createPlaylist() {
+        // 创建播放列表
         const res = prompt("Enter a title for your new playlist.", "");
         if (res.trim() && res.length < 150) {
             this.playlists = {
@@ -40,10 +42,12 @@ class PlaylistView {
     }
 
     playPlaylist(id) {
+        // 播放完整播放列表
         PlayerView.addToQueue(this.playlists[id].list);
     }
 
     renamePlaylist(id){
+        // 重命名播放列表
         const res = prompt("Enter a new title for your playlist.", this.playlists[id].name);
         if(res) {
             this.playlists[id].name = res;
@@ -53,6 +57,7 @@ class PlaylistView {
     }
 
     deletePlaylist(id) {
+        // 删除播放列表
         const res = confirm("Are you sure to delete the playlist?");
         if (res) {
             delete this.playlists[id];
@@ -126,30 +131,21 @@ export default PlaylistView;
 
 
 /*
+
 播放列表playlists结构：
 {
-  "114514": {
-    "name": "测试列表",
+  "114514": {                       // 列表被创建时的时间戳
+    "name": "测试列表",             // 播放列表
     "list": [
       {
-        "source": "wy",
-        "songmid": 5264842,
-        "hash": null,
-        "name": "渡口",
-        "albumName": "惠威T200A试音碟",
-        "singer": "蔡琴",
-        "img": "",
-        "vip": false
-      },
-      {
-        "source": "wy",
-        "songmid": 28892231,
-        "hash": null,
-        "name": "无法原谅",
-        "albumName": "无法原谅",
-        "singer": "李佳璐",
-        "img": "",
-        "vip": true
+        "source": "wy",             // 音乐平台
+        "songmid": 1145141,         // 歌曲 ID
+        "hash": null,               // 歌曲 HASH （仅kg源）
+        "name": "先辈之声",         // 歌曲名称
+        "albumName": "小小试音碟",  // 专辑名称
+        "albumId": "11451419",      // 专辑名称
+        "singer": "田所浩二",       // 歌手
+        "img": "",                  // 封面（加载错误则显示默认封面）
       }
     ]
   }

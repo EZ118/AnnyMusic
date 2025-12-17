@@ -1,6 +1,5 @@
 /*
  * This script is for storing url & response cache.
- * Not finished yet. 最新备注：现在有一个问题，缓存是添加好了，也能自动清理了，但是缓存读取失败？？？
  */
 class CacheManager {
     constructor() {
@@ -69,5 +68,7 @@ class CacheManager {
         }
     }
 }
+
+const cacheMgr = new CacheManager();
 
 // export default CacheManager;

@@ -44,15 +44,17 @@
 	</div>
 	
 	<dialog>
+		<!-- 对话框 -->
 	</dialog>
 
 	<script src="./js/icons.js"></script> <!-- 全局图标 -->
-	<script src="./js/util.js"></script> <!-- 工具函数（主要调用CRX的API） -->
+	<script src="./js/util.js"></script> <!-- 工具函数（调用CRX的API） -->
 	<script src="./js/cache_mgr.js"></script> <!-- 缓存管理器 -->
-	<script src="./js/lxapi.js"></script> <!-- 洛雪音源API（用于兼容音源） -->
-	<script src="./js/source_api.js"></script> <!-- 内置各平台搜索API（包括调用外部音源） -->
-	<script src="./js/views/dialog.js"></script> <!-- 对话框 -->
-	<script src="./js/views/player.js"></script> <!-- 播放器 -->
+	<script src="./js/lxapi.js"></script> <!-- lx_music 音源API -->
+	<script src="./js/source_api.js"></script> <!-- 内置各平台搜索API（包括统一调用音源的接口） -->
+	<script src="./js/views/dialog.js"></script> <!-- 对话框（全局） -->
+	<script src="./js/views/player.js"></script> <!-- 播放器（全局） -->
+	<script src="./js/stat_mgr.js"></script> <!-- 统计管理器（用于歌曲播放的） -->
 	<script src="./js/main.js" type="module"></script> <!-- 主程序 -->
 </body>
 

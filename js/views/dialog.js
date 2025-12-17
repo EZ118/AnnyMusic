@@ -74,7 +74,7 @@ const Dialog = {
     // 获取更新后的播放列表
     _getUpdatedPlaylists() {
         const playlists = JSON.parse(JSON.stringify(Dialog.options.playlists || {}));
-        const currentSong = Dialog.currentSong;
+        const { mp3, ...currentSong } = Dialog.currentSong; // 要把单曲数据的mp3链接去除，减少播放时无效请求
 
         Object.keys(playlists).forEach(playlistId => {
             const playlist = playlists[playlistId];
@@ -126,6 +126,7 @@ const Dialog = {
         return Dialog._renderContent();
     },
 
+    // 控制渲染内容
     _renderContent() {
         if (Dialog.mode === "addToPlaylist") {
             return Dialog._renderAddToPlaylist();
@@ -137,6 +138,7 @@ const Dialog = {
         return m('div', '未知的对话框模式');
     },
 
+    // 渲染：播放队列
     _renderPlayQueue() {
         return m('div.dialog-content', [
             m('h2.dialog-title', '播放队列'),
@@ -183,6 +185,7 @@ const Dialog = {
         ]);
     },
 
+    // 渲染：音乐元数据
     _renderMusicInfo() {
         return m('div.dialog-content', [
             m('h2.dialog-title', '信息'),
@@ -215,6 +218,7 @@ const Dialog = {
         ]);
     },
 
+    // 渲染：添加到收藏夹
     _renderAddToPlaylist() {
         const playlists = Dialog.options.playlists || {};
         const playlistIds = Object.keys(playlists);

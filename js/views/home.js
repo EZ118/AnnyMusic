@@ -5,8 +5,8 @@ class HomeView {
 
     oninit() {
         this.currentQuote = this.getRandomQuote();
-        this.recentlyPlayed = getStorageSync("recentlyPlayed") || [{}, {}, {}, {}, {}, {}];
-        this.recentPlaylist = getStorageSync("recentPlaylist") || [{}, {}, {}, {}];
+        this.recentlyPlayed = statMgr.data.songs || [{}, {}, {}];
+        this.recentPlaylist = statMgr.data.playlists || [{}, {}, {}];
     }
 
     getRandomQuote() {
@@ -44,25 +44,38 @@ class HomeView {
                 m(".home-section", [
                     m("h2", "Recently Played"),
                     this.recentlyPlayed.map((item) => {
-                        return m("div", { class: "music-card" }, [
-                            m("img", { class: "cover", src: "./img/default_cover.svg" }),
-                            m("div", { class: "info" }, [
-                                m("h3", { class: "title" }, "Song Title"),
-                                m("p", { class: "artist" }, "Artist Name")
-                            ])
-                        ])
+                        return m("div",
+                            {
+                                class: "music-card",
+                                onclick: () => {
+                                    PlayerView.play(item);
+                                }
+                            },
+                            [
+                                m("img.cover", { src: item.img, onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
+                                m("div.info", [
+                                    m("h3.title", item.name),
+                                    m("p.artist", item.singer)
+                                ])
+                            ]
+                        )
                     })
                 ]),
-                m(".home-section", { style: {"grid-template-columns": "repeat(1, 1fr)" } }, [
+                m(".home-section", { style: { "grid-template-columns": "repeat(1, 1fr)" } }, [
                     m("h2", "Recent Playlist"),
                     this.recentPlaylist.map((item) => {
-                        return m("div", { class: "music-card" }, [
-                            m("img", { class: "cover", src: "./img/default_cover.svg" }),
-                            m("div", { class: "info" }, [
-                                m("h3", { class: "title" }, "Song Title"),
-                                m("p", { class: "artist" }, "Artist Name")
-                            ])
-                        ])
+                        return m("div",
+                            {
+                                class: "music-card"
+                            },
+                            [
+                                m("img.cover", { src: "./img/default_cover.svg" }),
+                                m("div.info", [
+                                    m("h3.title", item.name),
+                                    m("p.artist", item.singer)
+                                ])
+                            ]
+                        )
                     })
                 ])
             ])

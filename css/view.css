@@ -144,6 +144,8 @@
     justify-content: center;
     align-items: flex-start;
     gap: 1px;
+
+    width: calc(100% - 10px - 50px);
 }
 
 .music-card .info .title {
@@ -152,6 +154,10 @@
     font-weight: bold;
     font-size: 16px;
     color: var(--s-color-on-surface);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .music-card .info .artist {

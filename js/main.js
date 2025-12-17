@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}, 500);
 });
 
-document.addEventListener('touchstart', function (event) {
+document.addEventListener('touchstart', (event) => {
     // 禁止通过触摸缩放页面
     if (event.touches.length > 1) {
         event.preventDefault();
