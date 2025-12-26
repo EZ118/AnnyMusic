@@ -22,15 +22,21 @@ body {
 }
 
 body {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
     background-color: var(--s-color-surface-container-low);
     color: var(--s-color-on-background);
     user-select: none;
     overflow: hidden;
+}
 
+#app{
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: inherit;
+    color: inherit;
+    overflow: hidden;
     font-size: 0.9em;
 }
 

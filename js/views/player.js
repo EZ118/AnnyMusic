@@ -1,6 +1,9 @@
+import ICON from "../icons.js";
+import { showDialog } from "./dialog.js";
+
 const defaultQuality = "128k";
 
-const LyricView = {
+export const LyricView = {
     oninit() {
         LyricView.isVisible = false;
         LyricView.lyric = [];
@@ -145,7 +148,7 @@ const LyricView = {
     }
 }
 
-const PlayerView = {
+export const PlayerView = {
     oninit() {
         PlayerView.currentInfo = {
             songmid: null,
@@ -201,7 +204,14 @@ const PlayerView = {
     },
 
     togglePlayQueue() {
-        Dialog.show("showPlayQueue", { list: PlayerView.songQueue });
+        // Dialog.show("showPlayQueue", { list: PlayerView.songQueue });
+        
+        showDialog({
+            mode: "showPlayQueue",
+            list: PlayerView.songQueue,
+            onConfirm(result) {},
+            onCancel() {}
+        });
     },
 
     play(musicInfo, fromQueueControl = false) {
@@ -302,7 +312,7 @@ const PlayerView = {
 
 
         // 刷新歌词
-        if(LyricView.isVisible) {
+        if (LyricView.isVisible) {
             LyricView.load(musicInfo);
         }
     },
@@ -374,7 +384,7 @@ const PlayerView = {
                     m('img.cover', { src: PlayerView.currentInfo.img, onerror: (e) => { e.currentTarget.src = "./img/default_cover.svg"; m.redraw(); } }),
                     m('p.title', [
                         PlayerView.currentInfo.name,
-                        m('font', { size:2, color:"#88888888", style: "display:block" }, PlayerView.currentInfo.singer)
+                        m('font', { size: 2, color: "#88888888", style: "display:block" }, PlayerView.currentInfo.singer)
                     ]),
                 ]),
                 m('.center', [
@@ -397,14 +407,27 @@ const PlayerView = {
     // external functions
     addToPlaylist(currentSong) {
         if (!currentSong.songmid) { return; }
-        Dialog.show("addToPlaylist", {
-            playlists: getStorageSync("playlists") || {},
-            currentSong: currentSong
-        }).then(updatedPlaylists => {
-            setStorageSync("playlists", updatedPlaylists);
-            // 保存更新后的播放列表
-        }).catch(updatedPlaylists => {
-            // setStorageSync("playlists", updatedPlaylists);
+        // Dialog.show("addToPlaylist", {
+        //     playlists: getStorageSync("playlists") || {},
+        //     currentSong: currentSong
+        // }).then(updatedPlaylists => {
+        //     setStorageSync("playlists", updatedPlaylists);
+        //     // 保存更新后的播放列表
+        // }).catch(updatedPlaylists => {
+        //     // setStorageSync("playlists", updatedPlaylists);
+        // });
+
+        showDialog({
+            mode: "addToPlaylist",
+            currentSong: currentSong,
+            playlists: getStorageSync("playlists"),
+            onConfirm(result) {
+                console.log("确认结果:", result);
+                setStorageSync("playlists", result.updatedPlaylists);
+                // result.updatedPlaylists 包含更新后的播放列表
+                // result.selectedPlaylists 包含选中的 ID
+            },
+            onCancel() {}
         });
     },
 
@@ -447,5 +470,3 @@ const PlayerView = {
         toast("已添加到播放队列");
     }
 }
-
-// export default PlayerView;

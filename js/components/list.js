@@ -1,3 +1,7 @@
+import ICON from "../icons.js";
+import { Dialog, showDialog } from "../views/dialog.js";
+import { PlayerView } from "../views/player.js";
+
 // MusicList 组件（用于搜索、播放列表...）
 const MusicList = {
     view: ({ attrs }) => {
@@ -39,7 +43,7 @@ const MusicList = {
                             m("button", {
                                 title: "Show detail",
                                 class: "icon-btn",
-                                onclick: () => Dialog.show("showMusicInfo", item)
+                                onclick: () => showDialog({ mode: "showMusicInfo", ...item, onConfirm(){}, onCancel(){} })
                             }, m.trust(ICON.info))
                         )
                     ]);

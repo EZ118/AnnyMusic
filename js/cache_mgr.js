@@ -71,4 +71,4 @@ class CacheManager {
 
 const cacheMgr = new CacheManager();
 
-// export default CacheManager;
+//export default cacheMgr;

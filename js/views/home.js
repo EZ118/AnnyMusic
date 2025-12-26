@@ -1,3 +1,5 @@
+import statMgr from "../stat_mgr.js";
+
 class HomeView {
     constructor() {
         this.currentQuote = "";

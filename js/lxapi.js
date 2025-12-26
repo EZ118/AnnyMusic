@@ -1,3 +1,7 @@
+/*
+ This file is for adapting lx_music music source.
+ */
+
 const eventHandlers = {};
 const sourceLists = {};
 

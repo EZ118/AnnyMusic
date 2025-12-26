@@ -1,4 +1,6 @@
+import ICON from "../icons.js";
 import MusicList from "../components/list.js";
+import { PlayerView } from "./player.js";
 
 class PlaylistView {
     constructor() {

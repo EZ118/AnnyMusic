@@ -1,3 +1,4 @@
+import ICON from "../icons.js";
 import Tabs from "../components/tabs.js";
 
 class SettingsView {

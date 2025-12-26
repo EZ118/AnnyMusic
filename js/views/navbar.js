@@ -1,3 +1,5 @@
+import ICON from "../icons.js";
+
 class NavView {
     constructor() {
         this.navItem = [

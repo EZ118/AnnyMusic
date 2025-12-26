@@ -1,7 +1,8 @@
 /*
  * This script is for counting songs listened and generate 'popular songs', 'recently played', 'popular playlists' etc..
- * Not finished yet.
  */
+
+import { PlayerView } from "./views/player.js";
 
 class StatisticsManager {
     constructor() {
@@ -20,9 +21,9 @@ class StatisticsManager {
             this.saveStat();
 
             // 阻止关闭（显示阻止对话框）
-            event.preventDefault();
-            event.returnValue = "确认退出吗？您的播放队列、播放进度和缓存将失效。";
-            return event.returnValue;
+            //event.preventDefault();
+            //event.returnValue = "确认退出吗？您的播放队列、播放进度和缓存将失效。";
+            //return event.returnValue;
         });
     }
 
@@ -63,4 +64,4 @@ class StatisticsManager {
 
 const statMgr = new StatisticsManager();
 
-// export default StatMgr
+export default statMgr;
