@@ -205,12 +205,18 @@ export const PlayerView = {
 
     togglePlayQueue() {
         // Dialog.show("showPlayQueue", { list: PlayerView.songQueue });
-        
+
         showDialog({
             mode: "showPlayQueue",
             list: PlayerView.songQueue,
-            onConfirm(result) {},
-            onCancel() {}
+            onConfirm(result) { PlayerView.songQueue = result.list },
+            // onClick(e) {
+            //     if (e.target.className == "playlist-item") {
+            //         const index = Array.from(e.target.parentNode.children).indexOf(e.target);
+            //         console.log(index)
+            //         PlayerView.play(PlayerView.songQueue[index]);
+            //     }
+            // }
         });
     },
 
@@ -427,7 +433,7 @@ export const PlayerView = {
                 // result.updatedPlaylists 包含更新后的播放列表
                 // result.selectedPlaylists 包含选中的 ID
             },
-            onCancel() {}
+            onCancel() { }
         });
     },
 
