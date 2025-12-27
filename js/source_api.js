@@ -1,3 +1,5 @@
+import { LxApi } from "./lxapi.js";
+
 // 将默认搜索源 利用类似音源的API实现
 (() => {
     const { EVENT_NAMES, request, on, send } = LxApi;
@@ -206,7 +208,7 @@
     console.log("内置搜索源已加载");
 })();
 
-function getLyricSource(key, callback) {
+export function getLyricSource(key, callback) {
     LxApi.emit(LxApi.EVENT_NAMES.request, {
         source: key.source,
         action: 'lyric',
@@ -219,7 +221,7 @@ function getLyricSource(key, callback) {
     });
 }
 
-function getSearchResult(q, platform, callback) {
+export function getSearchResult(q, platform, callback) {
     LxApi.emit(LxApi.EVENT_NAMES.request, {
         source: platform,
         action: "search",
@@ -232,7 +234,7 @@ function getSearchResult(q, platform, callback) {
     });
 }
 
-function getMusicSource(key, quality, callback) {
+export function getMusicSource(key, quality, callback) {
     LxApi.emit(LxApi.EVENT_NAMES.request, {
         source: key.source,
         action: 'musicUrl',
@@ -246,7 +248,7 @@ function getMusicSource(key, quality, callback) {
     });
 }
 
-function getMusicSourcePromise(url, playQuality) {
+export function getMusicSourcePromise(url, playQuality) {
     return new Promise((resolve) => {
         getMusicSource(url, playQuality, (key) => {
             resolve(key);

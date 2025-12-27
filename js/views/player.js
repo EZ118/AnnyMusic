@@ -1,5 +1,6 @@
 import ICON from "../icons.js";
 import { showDialog } from "./dialog.js";
+import { getLyricSource, getMusicSource, getMusicSourcePromise } from "../source_api.js";
 
 const defaultQuality = "128k";
 
@@ -428,7 +429,6 @@ export const PlayerView = {
             currentSong: currentSong,
             playlists: getStorageSync("playlists"),
             onConfirm(result) {
-                console.log("确认结果:", result);
                 setStorageSync("playlists", result.updatedPlaylists);
                 // result.updatedPlaylists 包含更新后的播放列表
                 // result.selectedPlaylists 包含选中的 ID

@@ -2,6 +2,8 @@
  This file is for adapting lx_music music source.
  */
 
+import cacheMgr from "./cache_mgr.js";
+
 const eventHandlers = {};
 const sourceLists = {};
 
@@ -275,7 +277,7 @@ const utils = {
     },
 };
 
-const LxApi = {
+export const LxApi = {
     version: '2.11.0',
     env: 'desktop',
     currentScriptInfo: {

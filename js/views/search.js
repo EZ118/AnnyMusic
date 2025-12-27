@@ -1,4 +1,5 @@
 import MusicList from "../components/list.js";
+import { getSearchResult } from "../source_api.js";
 
 class SearchView {
     constructor() { }
@@ -12,11 +13,6 @@ class SearchView {
         getSearchResult(keyword, this.platform, (res) => {
             this.searchResults = res;
             m.redraw();
-        });
-    }
-    getMusicLyric(musicInfo) {
-        getLyricSource(musicInfo, (res) => {
-            console.log(res);
         });
     }
     view(vnode) {

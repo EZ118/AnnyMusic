@@ -1,4 +1,5 @@
 import { App } from "./app.js";
+import { LxApi } from "./lxapi.js";
 
 document.addEventListener("DOMContentLoaded", () => {
 	/* 执行播放源 */
