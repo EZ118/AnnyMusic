@@ -1,4 +1,5 @@
 import statMgr from "../stat_mgr.js";
+import { PlayerView } from "../views/player.js";
 
 class HomeView {
     constructor() {
