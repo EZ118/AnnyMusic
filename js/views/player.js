@@ -295,7 +295,7 @@ export const PlayerView = {
 
             // 加载
             PlayerView.currentInfo = musicInfo;
-            PlayerView.audio.src = newKey.mp3;
+            PlayerView.audio.src = newKey?.mp3 || "https://EmptyMusicUrl_PleaseCheckYourMusicSource";
             PlayerView.audio.load();
 
             // 播放
@@ -306,6 +306,13 @@ export const PlayerView = {
                 })
                 .catch(err => {
                     console.error('[PlayerView.play] Error loading:', err);
+                    
+                    toast(PlayerView.currentInfo.name + " 加载失败");
+
+                    // 如果播放失败了，那么自动下一首歌
+                    if (PlayerView.songQueue.length > 1) {
+                        setTimeout(PlayerView.nextSong, 1000);
+                    }
                 });
 
             // 获取音频时长
